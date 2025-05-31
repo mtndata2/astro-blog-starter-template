@@ -1,9 +1,5 @@
 ---
-const kv = Astro.locals.runtime.env.CURRENCY_KV;
-
-const usd = await kv.get('USD_NGN', 'json');
-const eur = await kv.get('EUR_NGN', 'json');
-const gbp = await kv.get('GBP_NGN', 'json');
+import RatesTable from '../components/RatesTable.jsx';
 ---
 <html>
   <head>
@@ -12,33 +8,7 @@ const gbp = await kv.get('GBP_NGN', 'json');
   </head>
   <body>
     <h1>Nairatoday.com Live Black Market Rates</h1>
-    <table border="1" cellpadding="10">
-      <thead>
-        <tr>
-          <th>Currency</th>
-          <th>Buy Rate</th>
-          <th>Sell Rate</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1 USD</td>
-          <td>{usd?.buy ?? 'N/A'}</td>
-          <td>{usd?.sell ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>1 EUR</td>
-          <td>{eur?.buy ?? 'N/A'}</td>
-          <td>{eur?.sell ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>1 GBP</td>
-          <td>{gbp?.buy ?? 'N/A'}</td>
-          <td>{gbp?.sell ?? 'N/A'}</td>
-        </tr>
-      </tbody>
-    </table>
+    <RatesTable client:load />
     <p>Rates auto-update from Cloudflare KV.</p>
   </body>
 </html>
-
