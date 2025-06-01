@@ -1,0 +1,51 @@
+---
+import "../styles/global.css";
+
+// SSR-fetch USD_NGN rate at build/render time:
+let usdRate = {};
+try {
+  // Use absolute URL in production, fallback to prod URL in local
+  const baseUrl =
+    Astro.site ||
+    (Astro.request && new URL(Astro.request.url).origin) ||
+    "https://astro-blog-starter-template.mtndatasales.workers.dev";
+  const res = await fetch(`${baseUrl}/api/latest-rates`);
+  const rates = await res.json();
+  usdRate = rates.USD_NGN || {};
+} catch (e) {
+  usdRate = {};
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Dollar to Naira Black Market Rate Today</title>
+    <meta name="description" content="See the latest USD to NGN black market rate, updated live from Nairatoday." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Dollar (USD) to Naira (NGN) Black Market Exchange Rate</h1>
+      <div class="subtitle">Live rate updated now</div>
+    </div>
+
+    <div class="single-rate-card">
+      <div class="flag" style="font-size:2em">🇺🇸</div>
+      <div class="label">Dollar (USD)</div>
+      <div class="rate-row"><b>BUY:</b> ₦{usdRate.buy ?? "N/A"}</div>
+      <div class="rate-row"><b>SELL:</b> ₦{usdRate.sell ?? "N/A"}</div>
+      <div style="margin-top:8px; font-size:0.9em; color:#666;">
+        Updated live from <b>Nairatoday</b>
+      </div>
+    </div>
+
+    <div class="welcome-box" style="margin-top: 2em">
+      <h2>About Dollar to Naira Black Market Rate</h2>
+      <p>
+        The USD to NGN black market rate fluctuates daily based on market demand, FX supply, and news. Track rates here every day for up-to-date conversions, tips, and insights.
+      </p>
+    </div>
+  </body>
+</html>
