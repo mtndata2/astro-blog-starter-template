@@ -14,8 +14,10 @@ const currencies = [
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
 ];
 
-export default function RatesCards() {
-  const [rates, setRates] = useState({});
+export default function RatesCards({ rates: initialRates = {} }) {
+  const [rates, setRates] = useState(initialRates);
+
+  // Optionally re-fetch on client if you want up-to-date rates
   useEffect(() => {
     fetch('/api/latest-rates')
       .then(res => res.json())
