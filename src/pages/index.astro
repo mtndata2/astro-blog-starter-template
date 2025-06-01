@@ -1,9 +1,5 @@
 ---
-export const prerender = false;
 import '../styles/global.css';
-
-let error = null;
-let rates = {};
 
 const currencies = [
   { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD" },
@@ -19,26 +15,42 @@ const currencies = [
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" }
 ];
 
-try {
-  const kv = Astro.locals.runtime.env.CURRENCY_KV_ASTRO;
-  if (!kv) {
-    error = "KV binding not found!";
-  } else {
-    for (const { code } of currencies) {
-      rates[code] = await kv.get(`${code}_TODAY`, "json");
-    }
+let rates = {};
+const kv = Astro.locals.runtime.env.CURRENCY_KV_ASTRO;
+if (kv) {
+  for (const { code } of currencies) {
+    rates[code] = await kv.get(`${code}_TODAY`, "json");
   }
-} catch (e) {
-  error = e instanceof Error ? e.message : String(e);
 }
-<div class="cards">
-  {currencies.map(({ code, label, flag, name }) => (
-    <div class="card" key={code}>
-      <div class="flag">{flag}</div>
-      <div class="label">{label} ({name})</div>
-      <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
-      <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nairatoday - Live Black Market Exchange Rates</title>
+    <meta name="description" content="Track naira black market exchange rate: Dollar, Euro, Pound, and more to Naira. Live rates, daily updates." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
+      <div style="font-size:1.1em;">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
-  ))}
-</div>
-
+    <div class="cards">
+      <!-- Correct Astro loop syntax -->
+      {currencies.map(({ code, label, flag, name }) => (
+        <div class="card">
+          <div class="flag">{flag}</div>
+          <div class="label">{label} ({name})</div>
+          <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
+          <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
+        </div>
+      ))}
+    </div>
+    <div style="padding: 30px; max-width:700px; margin: 2em auto; background: #fff; border-radius: 12px;">
+      <h2>Welcome to Nairatoday.com</h2>
+      <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
+    </div>
+  </body>
+</html>
