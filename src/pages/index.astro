@@ -1,5 +1,5 @@
 ---
-import RatesTable from '../components/RatesTable.jsx';
+import RatesCards from '../components/RatesCards.jsx';
 import "../styles/global.css";
 ---
 
@@ -12,10 +12,13 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <h1>Nairatoday.com Live Black Market Rates</h1>
-    <RatesTable client:load />
+    <div class="header">
+      <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
+      <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
+    </div>
+    <RatesCards client:load />
 
-    <div style="padding: 30px; max-width:700px; margin: 2em auto; background: #fff; border-radius: 12px;">
+    <div class="welcome-box">
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     </div>
