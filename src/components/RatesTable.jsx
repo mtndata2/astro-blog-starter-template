@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from "react";
 
+const pairs = [
+  { code: "USD_NGN", label: "USD/NGN" },
+  { code: "EUR_NGN", label: "EUR/NGN" },
+  { code: "GBP_NGN", label: "GBP/NGN" },
+  { code: "CAD_NGN", label: "CAD/NGN" },
+  { code: "ZAR_NGN", label: "ZAR/NGN" },
+  { code: "AUD_NGN", label: "AUD/NGN" },
+  { code: "AED_NGN", label: "AED/NGN" },
+  { code: "CNY_NGN", label: "CNY/NGN" },
+  { code: "GHS_NGN", label: "GHS/NGN" },
+  { code: "XOF_NGN", label: "XOF/NGN" },
+  { code: "XAF_NGN", label: "XAF/NGN" },
+];
+
 export default function RatesTable() {
-  const [rates, setRates] = useState(null);
+  const [rates, setRates] = useState({});
 
   useEffect(() => {
     fetch('/api/latest-rates')
@@ -19,21 +33,13 @@ export default function RatesTable() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1 USD</td>
-          <td>{rates?.USD_NGN?.buy ?? 'N/A'}</td>
-          <td>{rates?.USD_NGN?.sell ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>1 EUR</td>
-          <td>{rates?.EUR_NGN?.buy ?? 'N/A'}</td>
-          <td>{rates?.EUR_NGN?.sell ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>1 GBP</td>
-          <td>{rates?.GBP_NGN?.buy ?? 'N/A'}</td>
-          <td>{rates?.GBP_NGN?.sell ?? 'N/A'}</td>
-        </tr>
+        {pairs.map(pair => (
+          <tr key={pair.code}>
+            <td>{pair.label}</td>
+            <td>{rates[pair.code]?.buy ?? 'N/A'}</td>
+            <td>{rates[pair.code]?.sell ?? 'N/A'}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
