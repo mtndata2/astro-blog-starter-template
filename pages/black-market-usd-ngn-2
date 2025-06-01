@@ -4,7 +4,7 @@ import "../styles/global.css";
 // SSR-fetch USD_NGN rate at build/render time:
 let usdRate = {};
 try {
-  // Use absolute URL in production, fallback to prod URL in local
+  // Use absolute URL in production,  and fallback to prod URL in local
   const baseUrl =
     Astro.site ||
     (Astro.request && new URL(Astro.request.url).origin) ||
