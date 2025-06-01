@@ -8,7 +8,7 @@ import RatesTable from '../components/RatesTable.jsx';
   </head>
   <body>
     <h1>Nairatoday.com Live Black Market Rates</h1>
-    <RatesTable client:load />
+    <RatesTable client:only="react" />
     <p>Rates auto-update from Cloudflare KV.</p>
   </body>
 </html>
