@@ -1,33 +1,50 @@
 ---
-import RatesCards from '../components/RatesCards.jsx';
-import "../styles/global.css";
+import '../styles/global.css';
 
-// Use Astro.fetch to SSR rates from the API
-let rates = {};
-try {
-  const res = await fetch(Astro.site + "/api/latest-rates");
-  rates = await res.json();
-} catch (e) {
-  rates = {}; // fallback if API fails
-}
+const response = await fetch('/api/latest-rates');
+const rates = response.ok ? await response.json() : {};
+
+const currencies = [
+  { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD" },
+  { code: "GBP_NGN", label: "Pound", flag: "🇬🇧", name: "GBP" },
+  { code: "EUR_NGN", label: "Euro", flag: "🇪🇺", name: "EUR" },
+  { code: "CAD_NGN", label: "Canadian Dollar", flag: "🇨🇦", name: "CAD" },
+  { code: "ZAR_NGN", label: "Rand", flag: "🇿🇦", name: "ZAR" },
+  { code: "AUD_NGN", label: "Aussie", flag: "🇦🇺", name: "AUD" },
+  { code: "AED_NGN", label: "Dirham", flag: "🇦🇪", name: "AED" },
+  { code: "CNY_NGN", label: "Yuan", flag: "🇨🇳", name: "CNY" },
+  { code: "GHS_NGN", label: "Cedi", flag: "🇬🇭", name: "GHS" },
+  { code: "XOF_NGN", label: "XOF", flag: "🌍", name: "XOF" },
+  { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
+];
 ---
 
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Nairatoday - Live Black Market Exchange Rates</title>
-    <meta name="description" content="Track naira black market exchange rate: Dollar, Euro, Pound, and more to Naira. Live rates, daily updates." />
+    <title>Dollar To Naira Black Market Rate Today</title>
+    <meta name="description" content="Live black market exchange rates for Dollar, Pound, Euro, and more." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/global.css">
   </head>
   <body>
     <div class="header">
       <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
-      <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
+      <div style="font-size:1.1em;">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
-    <RatesCards rates={rates} client:load />
 
-    <div class="welcome-box">
+    <div class="cards">
+      {currencies.map(({ code, label, flag, name }) => (
+        <div class="card" key={code}>
+          <div class="flag">{flag}</div>
+          <div class="label">{label} ({name})</div>
+          <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
+          <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
+        </div>
+      ))}
+    </div>
+
+    <div style="padding: 30px; max-width:700px; margin: 2em auto; background: #fff; border-radius: 12px;">
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     </div>
