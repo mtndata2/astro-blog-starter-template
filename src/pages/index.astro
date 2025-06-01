@@ -39,8 +39,6 @@ try {
       <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
 
-    <pre style="background:#222;color:#0f0;padding:8px;">{JSON.stringify(rates, null, 2)}</pre>
-
     <div class="cards">
       {currencies.map(({ code, label, flag, name }) => (
         <div class="card" key={code}>
