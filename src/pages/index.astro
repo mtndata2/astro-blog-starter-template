@@ -1,6 +1,4 @@
 ---
-const kv = Astro.locals.runtime.env.CURRENCY_KV_ASTRO;
-
 const currencies = [
   { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD" },
   { code: "GBP_NGN", label: "Pound", flag: "🇬🇧", name: "GBP" },
@@ -14,11 +12,6 @@ const currencies = [
   { code: "XOF_NGN", label: "XOF", flag: "🌍", name: "XOF" },
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
 ];
-
-let rates = {};
-for (const { code } of currencies) {
-  rates[code] = await kv.get(`${code}_TODAY`, "json");
-}
 ---
 
 <html>
@@ -26,28 +19,7 @@ for (const { code } of currencies) {
     <title>Dollar To Naira Black Market Rate Today</title>
     <meta name="description" content="Live black market exchange rates for Dollar, Pound, Euro, and more." />
     <style>
-      body { background: #f8f8f8; margin: 0; font-family: 'Segoe UI', Arial, sans-serif;}
-      .header { background: #166a39; color: #fff; padding: 20px 0; text-align: center;}
-      .cards { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 20px;}
-      .card {
-        background: #166a39;
-        color: #fff;
-        border-radius: 12px;
-        padding: 20px 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        min-width: 220px;
-        max-width: 300px;
-        text-align: center;
-        margin-bottom: 8px;
-        font-size: 1.15rem;
-      }
-      .flag { font-size: 2.3em; }
-      .label { font-size: 1.1em; margin-bottom: 10px; font-weight: bold;}
-      .rate-row { margin: 5px 0; font-size: 1em;}
-      @media (max-width: 800px) {
-        .cards { flex-direction: column; align-items: center; }
-        .card { width: 90%; }
-      }
+      /* ...your CSS here... */
     </style>
   </head>
   <body>
@@ -55,21 +27,31 @@ for (const { code } of currencies) {
       <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
       <div style="font-size:1.1em;">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
-
-    <div class="cards">
-      {currencies.map(({ code, label, flag, name }) => (
-        <div class="card" key={code}>
-          <div class="flag">{flag}</div>
-          <div class="label">{label} ({name})</div>
-          <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
-          <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
-        </div>
-      ))}
+    <div class="cards" id="ratesCards">
+      Loading...
     </div>
-
     <div style="padding: 30px; max-width:700px; margin: 2em auto; background: #fff; border-radius: 12px;">
       <h2>Welcome to Nairatoday.com</h2>
-      <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
+      <p>Your trusted source for real-time updates...</p>
     </div>
+    <script type="module">
+      const currencies = ${JSON.stringify(currencies)};
+      fetch('/api/latest-rates')
+        .then(r => r.json())
+        .then(rates => {
+          const el = document.getElementById('ratesCards');
+          el.innerHTML = currencies.map(({code, label, flag, name}) => `
+            <div class="card">
+              <div class="flag">${flag}</div>
+              <div class="label">${label} (${name})</div>
+              <div class="rate-row"><b>BUY</b> = ₦${rates[code]?.buy ?? 'N/A'}</div>
+              <div class="rate-row"><b>SELL</b> = ₦${rates[code]?.sell ?? 'N/A'}</div>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          document.getElementById('ratesCards').innerHTML = "<b>Could not load rates.</b>";
+        });
+    </script>
   </body>
 </html>
