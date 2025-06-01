@@ -15,16 +15,9 @@ const currencies = [
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
 ];
 
-function getBaseUrl(Astro) {
-  if (Astro.site) return Astro.site;
-  if (Astro.request) return new URL(Astro.request.url).origin;
-  return "https://astro-blog-starter-template.mtndatasales.workers.dev";
-}
-
 let rates = {};
 try {
-  const baseUrl = getBaseUrl(Astro);
-  const res = await fetch(`${baseUrl}/api/latest-rates`);
+  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/latest-rates");
   rates = await res.json();
 } catch (e) {
   rates = {};
@@ -45,6 +38,9 @@ try {
       <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
       <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
+
+    <pre style="background:#222;color:#0f0;padding:8px;">{JSON.stringify(rates, null, 2)}</pre>
+
     <div class="cards">
       {currencies.map(({ code, label, flag, name }) => (
         <div class="card" key={code}>
