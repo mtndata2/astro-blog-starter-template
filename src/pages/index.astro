@@ -1,8 +1,5 @@
 ---
-import '../styles/global.css';
-
-const response = await fetch('/api/latest-rates');
-const rates = response.ok ? await response.json() : {};
+import "../styles/global.css";
 
 const currencies = [
   { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD" },
@@ -17,22 +14,38 @@ const currencies = [
   { code: "XOF_NGN", label: "XOF", flag: "🌍", name: "XOF" },
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
 ];
+
+// Helper for SSR fetch absolute URL
+function getBaseUrl(Astro) {
+  if (Astro.site) return Astro.site;
+  if (Astro.request) return new URL(Astro.request.url).origin;
+  return "https://astro-blog-starter-template.mtndatasales.workers.dev"; // fallback to prod
+}
+
+let rates = {};
+try {
+  const baseUrl = getBaseUrl(Astro);
+  const res = await fetch(`${baseUrl}/api/latest-rates`);
+  rates = await res.json();
+} catch (e) {
+  rates = {};
+}
 ---
 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Dollar To Naira Black Market Rate Today</title>
-    <meta name="description" content="Live black market exchange rates for Dollar, Pound, Euro, and more." />
+    <title>Nairatoday - Live Black Market Exchange Rates</title>
+    <meta name="description" content="Track naira black market exchange rate: Dollar, Euro, Pound, and more to Naira. Live rates, daily updates." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/global.css">
   </head>
   <body>
     <div class="header">
       <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
-      <div style="font-size:1.1em;">Live rates for Dollar, Pound, Euro, and more</div>
+      <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
     </div>
-
     <div class="cards">
       {currencies.map(({ code, label, flag, name }) => (
         <div class="card" key={code}>
@@ -43,8 +56,7 @@ const currencies = [
         </div>
       ))}
     </div>
-
-    <div style="padding: 30px; max-width:700px; margin: 2em auto; background: #fff; border-radius: 12px;">
+    <div class="welcome-box">
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     </div>
