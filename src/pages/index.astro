@@ -15,11 +15,10 @@ const currencies = [
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF" },
 ];
 
-// Helper for SSR fetch absolute URL
 function getBaseUrl(Astro) {
   if (Astro.site) return Astro.site;
   if (Astro.request) return new URL(Astro.request.url).origin;
-  return "https://astro-blog-starter-template.mtndatasales.workers.dev"; // fallback to prod
+  return "https://astro-blog-starter-template.mtndatasales.workers.dev";
 }
 
 let rates = {};
