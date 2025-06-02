@@ -1,14 +1,13 @@
 ---
 import "../styles/global.css";
 
-// Helper to get base URL in SSR, fallback to prod if local/dev
 function getBaseUrl(Astro) {
   if (Astro.site) return Astro.site;
   if (Astro.request) return new URL(Astro.request.url).origin;
-  return "https://astro-blog-starter-template.mtndatasales.workers.dev"; // fallback
+  return "https://astro-blog-starter-template.mtndatasales.workers.dev";
 }
 
-// Get 30d history from API (you should create this API, or use static test data)
+// Fetch 30d USD/NGN history
 let history = [];
 try {
   const baseUrl = getBaseUrl(Astro);
@@ -17,77 +16,61 @@ try {
     history = await res.json();
   }
 } catch (e) {
-  // Fallback demo data, oldest first:
-  history = [
-    { date: "2024-05-02", buy: 1490, sell: 1510 },
-    { date: "2024-05-03", buy: 1500, sell: 1520 },
-    { date: "2024-05-04", buy: 1510, sell: 1530 },
-    { date: "2024-05-05", buy: 1495, sell: 1515 },
-    { date: "2024-05-06", buy: 1510, sell: 1530 },
-    { date: "2024-05-07", buy: 1515, sell: 1535 },
-    { date: "2024-05-08", buy: 1508, sell: 1528 },
-    // ... up to 30 items for real use
-  ];
+  history = [];
 }
 
-// Calculate 30d high/low
-let buyHigh = Math.max(...history.map(h => h.buy ?? 0));
-let buyLow = Math.min(...history.map(h => h.buy ?? Infinity));
-let sellHigh = Math.max(...history.map(h => h.sell ?? 0));
-let sellLow = Math.min(...history.map(h => h.sell ?? Infinity));
+// Extract today's and yesterday's rates
+const today = history.at(-1) || {}; // Last in array
+const yesterday = history.at(-2) || {};
+const todayDate = today.date ? new Date(today.date) : new Date();
+const buyRate = today.buy ?? 'N/A';
+const sellRate = today.sell ?? 'N/A';
+const buyRateYesterday = yesterday.buy ?? null;
 
-// Get the last 7 days for table
-let last7 = history.slice(-7).reverse(); // newest first
+// Calculate percent change
+let percentChange = '';
+if (buyRateYesterday && typeof buyRate === 'number') {
+  const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 100;
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + '%';
+}
+
+// Format date (e.g. "2 June 2025")
+function formatDate(dt) {
+  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Dollar (USD) to Naira Black Market Rate - Last 30 Days</title>
-    <meta name="description" content="See the latest USD to NGN black market exchange rates, graph, 30-day history, 7-day table, and all time high/low." />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body>
-    <section class="currency-page">
-      <div class="currency-header">
-        <span class="currency-flag">🇺🇸</span>
-        <h1>USD to NGN Black Market Rate</h1>
+<head>
+  <meta charset="UTF-8" />
+  <title>Dollar (USD) to Naira Black Market Rate - Last 30 Days</title>
+  <meta name="description" content="See the latest USD to NGN black market exchange rates, graph, 30-day history, 7-day table, and all time high/low." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <section class="currency-page">
+    <div class="currency-header">
+      <span class="currency-flag">🇺🇸</span>
+      <h1>USD to NGN Black Market Rate</h1>
+    </div>
+    
+    <!-- Summary Section (Put this before the graph!) -->
+    <div class="summary-box">
+      <b>As of {formatDate(todayDate)}, the exchange rate for 1 US Dollar to Nigerian Naira is <span style="color:#166a39;">₦{buyRate}</span>. 
+      Compared to yesterday, this represents a <span style={percentChange.startsWith('↓') ? 'color:red;' : 'color:green;'}>{percentChange || '—'}</span> in value.</b>
+      <div style="margin-top:0.8em">
+        If you're planning to buy <b>1 Dollar</b> at street value, the current rate would cost you approximately <span style="color:#166a39;"><b>₦{buyRate}</b></span>.
       </div>
-
-      <div id="chart-container">
-        <!--
-          Here you can mount a React Chart component.
-          Or use vanilla JS chart (Chart.js or Google Charts) on mount.
-          Or just show a placeholder for now.
-        -->
-        <em style="color:#8ba390;">[Chart coming soon]</em>
+      <div style="margin-top:0.5em">
+        Do you have 1 Dollar to sell now? Here is the rate to sell: <span style="color:#166a39;"><b>₦{sellRate}</b></span> for USD.
       </div>
+    </div>
 
-      <div class="stats-box">
-        <div><b>30d High (Buy):</b> ₦{buyHigh}</div>
-        <div><b>30d Low (Buy):</b> ₦{buyLow}</div>
-        <div><b>30d High (Sell):</b> ₦{sellHigh}</div>
-        <div><b>30d Low (Sell):</b> ₦{sellLow}</div>
-      </div>
+    <div id="chart-container">
+      <em style="color:#8ba390;">[Chart coming soon]</em>
+    </div>
 
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Buy</th>
-            <th>Sell</th>
-          </tr>
-        </thead>
-        <tbody>
-          {last7.map(day => (
-            <tr>
-              <td>{day.date}</td>
-              <td>₦{day.buy ?? "N/A"}</td>
-              <td>₦{day.sell ?? "N/A"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
-  </body>
+    <!-- ... rest of your page ... -->
+  </section>
+</body>
 </html>
