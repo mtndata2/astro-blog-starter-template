@@ -1,53 +1,17 @@
 ---
-import UsdNgnChart from '../components/UsdNgnChart.jsx';
-import UsdNgnTable from '../components/UsdNgnTable.jsx';
+import CurrencyHistory from '../components/CurrencyHistory.jsx';
 import "../styles/global.css";
-
-// SSR fetch from your API or KV (use absolute URL in production)
-let history = [];
-try {
-  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/usd-ngn-history");
-  history = await res.json();
-} catch (e) {
-  history = [];
-}
-
-// Get 30-day high/low
-const sells = history.map(d => d.sell);
-const buys = history.map(d => d.buy);
-const sellHigh = Math.max(...sells);
-const sellLow = Math.min(...sells);
-const buyHigh = Math.max(...buys);
-const buyLow = Math.min(...buys);
-
-// Last 7 days
-const last7 = history.slice(-7).reverse();
 ---
 
 <html>
   <head>
-    <title>Dollar to Naira Black Market Chart & Table</title>
-    <meta name="description" content="30 days history of dollar to naira black market rates, graph, recent table, high/low rates." />
+    <title>Dollar to Naira 30-Day Black Market Trend</title>
+    <meta name="description" content="Dollar to Naira black market rates: 30-day trend, daily highs/lows, last 7 days table." />
   </head>
   <body>
-    <h1>USD/NGN Black Market Rate - Last 30 Days</h1>
+    <h1>USD to NGN Black Market Rate - Detailed History</h1>
+    <CurrencyHistory pair="usd_ngn" label="USD/NGN" client:load />
 
-    <section>
-      <h2>30-Day Exchange Rate Chart</h2>
-      <UsdNgnChart data={history} client:only="react" />
-    </section>
-
-    <section>
-      <h2>7-Day Recent Table</h2>
-      <UsdNgnTable data={last7} client:only="react" />
-    </section>
-
-    <section>
-      <h2>30-Day High/Low</h2>
-      <div>
-        <b>Sell High:</b> ₦{sellHigh} &nbsp; <b>Sell Low:</b> ₦{sellLow}<br/>
-        <b>Buy High:</b> ₦{buyHigh} &nbsp; <b>Buy Low:</b> ₦{buyLow}
-      </div>
-    </section>
+    <!-- You can add content or related articles here -->
   </body>
 </html>
