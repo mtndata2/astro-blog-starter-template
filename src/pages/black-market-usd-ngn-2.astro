@@ -1,38 +1,35 @@
 ---
 import "../styles/global.css";
+import Header from "../components/Header.astro"; // Adjust the path if needed
 
-// Helper for getting the base URL
 function getBaseUrl(Astro) {
   if (Astro.site) return Astro.site;
   if (Astro.request) return new URL(Astro.request.url).origin;
   return "https://astro-blog-starter-template.mtndatasales.workers.dev";
 }
 
-// Fetch today rate
+// Fetch today's USD/NGN rate
 let latest = {};
 try {
   const baseUrl = getBaseUrl(Astro);
   const res = await fetch(`${baseUrl}/api/latest-rates`);
   if (res.ok) {
     const data = await res.json();
-    latest = data["USD_NGN"] ?? {};
+    latest = data.USD_NGN ?? {};
   }
 } catch (e) {
   latest = {};
 }
-
-// Fetch history
-let history = [];
-try {
-  const baseUrl = getBaseUrl(Astro);
-  const res = await fetch(`${baseUrl}/api/usd-ngn-history`);
-  if (res.ok) history = await res.json();
-} catch (e) {
-  history = [];
-}
 ---
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>USD to NGN Black Market Rate</title>
+    <meta name="description" content="Live USD to Naira black market rate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
   <body>
+    <Header />
     <section>
       <p>
         As of {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}, the exchange rate for 1 US Dollar to Nigerian Naira is <b>₦{latest.sell ?? "N/A"}</b>.
@@ -43,7 +40,6 @@ try {
       <p>
         Do you have 1 Dollar to sell now? Here is the rate to sell: <b>₦{latest.buy ?? "N/A"}</b> for USD.
       </p>
-      <!-- The rest of your chart/table here... -->
     </section>
   </body>
 </html>
