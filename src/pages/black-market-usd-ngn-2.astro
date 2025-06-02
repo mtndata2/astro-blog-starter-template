@@ -1,26 +1,27 @@
 ---
 import "../styles/global.css";
-import Header from "../components/Header.astro"; // Adjust the path if needed
+import Header from "../components/Header.astro";
 
+// Helper for absolute URL in SSR
 function getBaseUrl(Astro) {
   if (Astro.site) return Astro.site;
   if (Astro.request) return new URL(Astro.request.url).origin;
   return "https://astro-blog-starter-template.mtndatasales.workers.dev";
 }
 
-// Fetch today's USD/NGN rate
 let latest = {};
 try {
   const baseUrl = getBaseUrl(Astro);
   const res = await fetch(`${baseUrl}/api/latest-rates`);
   if (res.ok) {
     const data = await res.json();
-    latest = data.USD_NGN ?? {};
+    latest = data["USD_NGN"] ?? {};
   }
 } catch (e) {
   latest = {};
 }
 ---
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
