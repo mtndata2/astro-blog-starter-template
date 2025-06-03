@@ -1,14 +1,134 @@
 ---
+import "../styles/global.css";
+
+// Helper: Get absolute URL for SSR fetches
+function getBaseUrl(Astro) {
+  if (Astro.site) return Astro.site;
+  if (Astro.request) return new URL(Astro.request.url).origin;
+  return "https://astro-blog-starter-template.mtndatasales.workers.dev";
+}
+
+// Fetch today's rate (for summary box)
 let latest = {};
 try {
-  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/latest-rates");
+  const res = await fetch(`${getBaseUrl(Astro)}/api/latest-rates`);
   if (res.ok) {
     const allRates = await res.json();
     latest = allRates.USD_NGN ?? {};
   }
 } catch {}
+
+// Fetch 30-day history (for table/chart/stats)
+let history = [];
+try {
+  const res = await fetch(`${getBaseUrl(Astro)}/api/usd-ngn-history`);
+  if (res.ok) {
+    history = await res.json();
+  }
+} catch {}
+
+// Calculate 30d high/low (guard for empty)
+let buyHigh = history.length ? Math.max(...history.map(h => h.buy ?? 0)) : (latest.buy ?? 0);
+let buyLow = history.length ? Math.min(...history.map(h => h.buy ?? Infinity)) : (latest.buy ?? 0);
+let sellHigh = history.length ? Math.max(...history.map(h => h.sell ?? 0)) : (latest.sell ?? 0);
+let sellLow = history.length ? Math.min(...history.map(h => h.sell ?? Infinity)) : (latest.sell ?? 0);
+
+// Last 7 days (newest first)
+let last7 = history.slice(-7).reverse();
+
+// Get percent change from history
+let percentChange = '';
+if (
+  history.length > 1 &&
+  typeof history.at(-1)?.buy === "number" &&
+  typeof history.at(-2)?.buy === "number"
+) {
+  const pct = ((history.at(-1).buy - history.at(-2).buy) / history.at(-2).buy) * 100;
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + '%';
+}
+
+// Date formatting for summary
+function formatDate(dt = new Date()) {
+  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+const todayDate = new Date();
+
+// Fallback if all data missing (shouldn't happen if KV is right)
+const buyRate = typeof latest.sell === "number" ? latest.sell : 'N/A';
+const sellRate = typeof latest.buy === "number" ? latest.buy : 'N/A';
 ---
-<h1>Today's Rate Test</h1>
-<pre>{JSON.stringify(latest, null, 2)}</pre>
-<div>Buy: {latest.buy ?? "N/A"}</div>
-<div>Sell: {latest.sell ?? "N/A"}</div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dollar (USD) to Naira Black Market Rate - Last 30 Days</title>
+    <meta name="description" content="See the latest USD to NGN black market exchange rates, graph, 30-day history, 7-day table, and all time high/low." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <section class="currency-page">
+      <div class="currency-header">
+        <span class="currency-flag">🇺🇸</span>
+        <h1>USD to NGN Black Market Rate</h1>
+      </div>
+
+      <!-- SUMMARY BOX: ALWAYS USE LATEST RATE, NOT HISTORY -->
+      <div class="summary-box">
+        <b>
+          As of {formatDate(todayDate)}, the exchange rate for 1 US Dollar to Nigerian Naira is <span style="color:#166a39;">₦{buyRate}</span>.
+          {percentChange && (
+            <>
+              Compared to yesterday, this represents a
+              <span style={percentChange.startsWith('↓') ? 'color:red;' : 'color:green;'}>{percentChange}</span> in value.
+            </>
+          )}
+        </b>
+        <div style="margin-top:0.8em">
+          If you're planning to buy <b>1 Dollar</b> at street value, the current rate would cost you approximately <span style="color:#166a39;"><b>₦{buyRate}</b></span>.
+        </div>
+        <div style="margin-top:0.5em">
+          Do you have 1 Dollar to sell now? Here is the rate to sell: <span style="color:#166a39;"><b>₦{sellRate}</b></span> for USD.
+        </div>
+      </div>
+
+      <!-- CHART PLACEHOLDER (replace with a real chart component if needed) -->
+      <div id="chart-container" style="margin-bottom: 2em;">
+        <em style="color:#8ba390;">[Chart coming soon]</em>
+      </div>
+
+      <!-- HIGH/LOW STATS -->
+      <div class="stats-box">
+        <div><b>30d High (Buy):</b> ₦{buyHigh}</div>
+        <div><b>30d Low (Buy):</b> ₦{buyLow}</div>
+        <div><b>30d High (Sell):</b> ₦{sellHigh}</div>
+        <div><b>30d Low (Sell):</b> ₦{sellLow}</div>
+      </div>
+
+      <!-- LAST 7 DAYS TABLE -->
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+        </thead>
+        <tbody>
+          {last7.length
+            ? last7.map(day => (
+              <tr>
+                <td>{day.date}</td>
+                <td>₦{day.buy ?? "N/A"}</td>
+                <td>₦{day.sell ?? "N/A"}</td>
+              </tr>
+            ))
+            : (
+              <tr>
+                <td colSpan="3">No history data available</td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    </section>
+  </body>
+</html>
