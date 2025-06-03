@@ -53,13 +53,23 @@ const sellLow = Math.min(...history.map(h => typeof h.sell === "number" ? h.sell
 
 // 6. Last 7 days for table (newest first)
 const last7 = history.slice(-7).reverse();
+
+// 7. Generate rows for 1 to 100 multiplied by sellRate
+const multiplierRows = [];
+for (let i = 1; i <= 100; i++) {
+  // If sellRate is a number, calculate; otherwise, display "N/A"
+  multiplierRows.push({
+    amount: i,
+    result: typeof sellRate === "number" ? (i * sellRate).toLocaleString() : "N/A"
+  });
+}
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Canadian Dollar (CAD) to Naira Black Market Rate - Last 30 Days</title>
-    <meta name="description" content="See the latest CAD to NGN black market exchange rates, graph, 30-day history, 7-day table, and all time high/low." />
+    <meta name="description" content="See the latest CAD to NGN black market exchange rates, graph, 30-day history, 7-day table, all time high/low, and a calculator for amounts up to 100." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
@@ -116,6 +126,25 @@ const last7 = history.slice(-7).reverse();
               </td>
               <td>₦{typeof day.buy === "number" ? day.buy : "N/A"}</td>
               <td>₦{typeof day.sell === "number" ? day.sell : "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <!-- Amount Calculator Table -->
+      <h2 style="margin-top:2em;">Quick CAD to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (CAD)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {multiplierRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
             </tr>
           ))}
         </tbody>
