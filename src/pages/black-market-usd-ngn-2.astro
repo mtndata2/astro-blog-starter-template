@@ -12,70 +12,66 @@ let history = [];
 let latest = {};
 try {
   const baseUrl = getBaseUrl(Astro);
-  // Fetch 30-day history
-  const res = await fetch(`${baseUrl}/api/usd-ngn-history`);
-  if (res.ok) history = await res.json();
 
-  // Fetch latest rates and patch last day of history
-  const res2 = await fetch(`${baseUrl}/api/latest-rates`);
-  if (res2.ok) {
-    const allRates = await res2.json();
+  // 1. Get history
+  const resHistory = await fetch(`${baseUrl}/api/usd-ngn-history`);
+  if (resHistory.ok) {
+    history = await resHistory.json();
+  }
+
+  // 2. Get latest
+  const resLatest = await fetch(`${baseUrl}/api/latest-rates`);
+  if (resLatest.ok) {
+    const allRates = await resLatest.json();
     latest = allRates.USD_NGN ?? {};
-    if (history.length) {
-      history[history.length - 1] = {
-        ...history[history.length - 1],
-        ...latest,
-      };
-    } else if (latest) {
-      // If no history, fallback to latest only
-      history = [{ date: (new Date()).toISOString().slice(0, 10), ...latest }];
+  }
+
+  // 3. Patch last history day if history is present
+  if (history.length) {
+    const last = history[history.length - 1];
+    // Only patch if latest is not empty and buy/sell are missing/null
+    if (latest && (last.buy == null || last.sell == null)) {
+      history[history.length - 1] = { ...last, ...latest };
     }
   }
+
+  // 4. If no history, create an entry using latest (with today's date)
+  if (!history.length && latest && (latest.buy || latest.sell)) {
+    const todayIso = new Date().toISOString().slice(0, 10);
+    history = [{ date: todayIso, ...latest }];
+  }
+
 } catch (e) {
-  // fallback if API is unreachable
-  history = [
-    { date: "2024-05-25", buy: 1520, sell: 1538 },
-    { date: "2024-05-26", buy: 1530, sell: 1545 },
-    { date: "2024-05-27", buy: 1518, sell: 1530 },
-    { date: "2024-05-28", buy: 1532, sell: 1540 },
-    { date: "2024-05-29", buy: 1538, sell: 1552 },
-    { date: "2024-05-30", buy: 1535, sell: 1548 },
-    { date: "2024-05-31", buy: 1530, sell: 1542 },
-    { date: "2024-06-01", buy: 1528, sell: 1540 },
-    { date: "2024-06-02", buy: 1542, sell: 1555 }
-  ];
-  latest = history.at(-1) || {};
+  history = [];
+  latest = {};
 }
 
-// Calculate 30d high/low
+// Calculate stats
 let buyHigh = Math.max(...history.map(h => h.buy ?? 0));
 let buyLow = Math.min(...history.map(h => h.buy ?? Infinity));
 let sellHigh = Math.max(...history.map(h => h.sell ?? 0));
 let sellLow = Math.min(...history.map(h => h.sell ?? Infinity));
-
-// Get the last 7 days for table (newest first)
 let last7 = history.slice(-7).reverse();
 
-// Today's and yesterday's rates for summary
 const today = history.at(-1) || {};
 const yesterday = history.at(-2) || {};
 const todayDate = today.date
-  ? (today.date.length === 8 // e.g. 20250531
+  ? (today.date.length === 8
       ? new Date(today.date.replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3'))
       : new Date(today.date))
   : new Date();
-const buyRate = today.buy ?? 'N/A';
-const sellRate = today.sell ?? 'N/A';
+
+// **KEY FIX:** Always show latest if available, fallback to today's history
+const buyRate = latest.buy ?? today.buy ?? 'N/A';
+const sellRate = latest.sell ?? today.sell ?? 'N/A';
 const buyRateYesterday = yesterday.buy ?? null;
 
-// Percent change
 let percentChange = '';
 if (buyRateYesterday && typeof buyRate === 'number') {
   const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 100;
   percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + '%';
 }
 
-// Date format helper
 function formatDate(dt) {
   return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
