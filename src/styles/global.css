@@ -416,3 +416,24 @@ body {
 }
 .history-table th { background: #166a39; color: #fff; }
 .history-table tr:last-child td { border-bottom: none; }
+
+.to-naira-btn {
+  display: inline-block;
+  background: #166a39;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 6px 20px;
+  margin-top: 10px;
+  text-decoration: none;
+  transition: background 0.16s;
+}
+.to-naira-btn:hover { background: #128b3d; color:#fff; }
+
+.rate-row-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  margin-bottom: 6px;
+}
+.rate-row-link:hover .rate-row { text-decoration: underline; color: #166a39; }
