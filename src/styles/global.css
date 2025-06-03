@@ -436,7 +436,14 @@ body {
   display: block;
   margin-bottom: 6px;
 }
-.rate-row-link:hover .rate-row { text-decoration: underline; color: #166a39; }
+
+.rate-row-link:hover .rate-row {
+  text-decoration: underline;
+  color: #faf9f6;   /* Light cream that shows on green */
+  background: rgba(255,255,255,0.10);
+  border-radius: 6px;
+}
+
 .main-footer {
   background: #166a39;
   color: #fff;
