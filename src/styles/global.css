@@ -513,3 +513,45 @@ h2 {
   border: 0 !important;
 }
 
+
+/* Always include this at the very top of your CSS */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+/* About, Contact, Privacy etc. Pages */
+.about-page,
+.contact-page,
+.privacy-page {
+  max-width: 700px;
+  width: 100%;
+  margin: 3em auto;
+  padding: 2em 1em;
+  background: #faf9f6;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px #0001;
+  box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+  .about-page,
+  .contact-page,
+  .privacy-page {
+    padding: 1.2em 2vw;
+    margin: 1.2em 0;
+    border-radius: 11px;
+  }
+}
+
+/* Always break long words/URLs in text or links */
+.about-page a,
+.about-page p,
+.contact-page a,
+.contact-page p,
+.privacy-page a,
+.privacy-page p {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
