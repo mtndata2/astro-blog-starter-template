@@ -2,10 +2,9 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 
-// ABSOLUTE URLs (update with your real deployed domain if it changes)
 const API_BASE = "https://astro-blog-starter-template.mtndatasales.workers.dev";
 
-// 1. Fetch today's rate (always absolute URL)
+// 1. Fetch today's rate for USD/NGN
 let latest = {};
 try {
   const res = await fetch(`${API_BASE}/api/latest-rates`);
@@ -17,7 +16,7 @@ try {
   latest = {};
 }
 
-// 2. Fetch 30-day USD/NGN history (oldest to newest)
+// 2. Fetch 30-day USD/NGN history
 let history = [];
 try {
   const res = await fetch(`${API_BASE}/api/usd-ngn-history`);
@@ -28,7 +27,7 @@ try {
   history = [];
 }
 
-// 3. Fallback for today's rate if missing in history
+// 3. Date helpers & fallback for today
 const today = history.at(-1) || {};
 const todayDate = today.date
   ? `${today.date.slice(6,8)} ${new Date(today.date.slice(0,4)+'-'+today.date.slice(4,6)+'-'+today.date.slice(6,8)).toLocaleString('en-GB',{month:'long'})} ${today.date.slice(0,4)}`
@@ -37,37 +36,45 @@ const todayDate = today.date
 const buyRate = typeof latest.buy === "number" ? latest.buy : today.buy ?? "N/A";
 const sellRate = typeof latest.sell === "number" ? latest.sell : today.sell ?? "N/A";
 
-// 4. Calculate yesterday's rate for percent change (from history)
+// 4. Percent change vs yesterday
 const yesterday = history.length > 1 ? history.at(-2) : {};
 const buyRateYesterday = typeof yesterday.buy === "number" ? yesterday.buy : null;
 let percentChange = "";
 if (buyRateYesterday && typeof buyRate === "number") {
   const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 100;
-  percentChange = (pct > 0 ? "↑" : "↓") + " " + Math.abs(pct).toFixed(2) + "%";
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + "%";
 }
 
-// 5. 30-day High/Low (handle all-N/A gracefully)
+// 5. 30-day High/Low
 const buyHigh = Math.max(...history.map(h => h.buy ?? -Infinity));
 const buyLow = Math.min(...history.map(h => typeof h.buy === "number" ? h.buy : Infinity));
 const sellHigh = Math.max(...history.map(h => h.sell ?? -Infinity));
 const sellLow = Math.min(...history.map(h => typeof h.sell === "number" ? h.sell : Infinity));
 
-// 6. Last 7 days for the table
+// 6. Last 7 days for table (newest first)
 const last7 = history.slice(-7).reverse();
+
+// 7. Generate rows for 1 to 100 multiplied by sellRate
+const multiplierRows = [];
+for (let i = 1; i <= 100; i++) {
+  multiplierRows.push({
+    amount: i,
+    result: typeof sellRate === "number" ? (i * sellRate).toLocaleString() : "N/A"
+  });
+}
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Dollar (USD) to Naira Black Market Rate - Last 30 Days</title>
-    <meta name="description" content="See the latest USD to NGN black market exchange rates, graph, 30-day history, 7-day table, and all time high/low." />
+    <meta name="description" content="See the latest USD to NGN black market exchange rates, graph, 30-day history, 7-day table, all time high/low, and a calculator for amounts up to 100." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <Header />
     <section class="currency-page">
       <div class="currency-header">
-        <span class="currency-flag">🇺🇸</span>
         <h1>USD to NGN Black Market Rate</h1>
       </div>
 
@@ -118,6 +125,25 @@ const last7 = history.slice(-7).reverse();
               </td>
               <td>₦{typeof day.buy === "number" ? day.buy : "N/A"}</td>
               <td>₦{typeof day.sell === "number" ? day.sell : "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <!-- Amount Calculator Table -->
+      <h2 style="margin-top:2em;">Quick USD to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (USD)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {multiplierRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
             </tr>
           ))}
         </tbody>
