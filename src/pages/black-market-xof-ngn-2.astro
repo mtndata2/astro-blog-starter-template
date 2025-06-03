@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 const API_BASE = "https://astro-blog-starter-template.mtndatasales.workers.dev";
 
@@ -75,9 +76,57 @@ for (let i = 1; i <= 100; i++) {
           Selling? The rate to sell: <span style="color:#166a39;"><b>₦{sellRate}</b></span> for XOF.
         </div>
       </div>
-      <div id="chart-container" style="margin-bottom: 2em;"><em style="color:#8ba390;">[Chart coming soon]</em></div>
+      <div id="chart-container" style="margin-bottom: 2em;">
+        <em style="color:#8ba390;">[Chart coming soon]</em>
+      </div>
       <div class="stats-box">
         <div><b>30d High (Buy):</b> ₦{buyHigh === -Infinity ? "N/A" : buyHigh}</div>
         <div><b>30d Low (Buy):</b> ₦{buyLow === Infinity ? "N/A" : buyLow}</div>
         <div><b>30d High (Sell):</b> ₦{sellHigh === -Infinity ? "N/A" : sellHigh}</div>
-        <div><b>30d Low (
+        <div><b>30d Low (Sell):</b> ₦{sellLow === Infinity ? "N/A" : sellLow}</div>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Buy</th>
+            <th>Sell</th>
+          </tr>
+        </thead>
+        <tbody>
+          {last7.map(day => (
+            <tr>
+              <td>
+                {day.date
+                  ? `${day.date.slice(6,8)} ${new Date(day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8)).toLocaleString('en-GB',{month:'short'})} ${day.date.slice(0,4)}`
+                  : "-"}
+              </td>
+              <td>₦{typeof day.buy === "number" ? day.buy : "N/A"}</td>
+              <td>₦{typeof day.sell === "number" ? day.sell : "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <!-- Amount Calculator Table -->
+      <h2 style="margin-top:2em;">Quick XOF to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (XOF)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {multiplierRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+    <Footer />
+  </body>
+</html>
