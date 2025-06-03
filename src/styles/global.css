@@ -478,3 +478,11 @@ body {
   font-weight: 700;
 }
 
+h2 {
+  font-size: 1.22rem;    /* Control all h2 globally */
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.7em;
+  color: #176a39;        /* Optional: make h2 a slightly different color */
+  line-height: 1.24;
+}
