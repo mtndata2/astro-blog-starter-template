@@ -22,6 +22,16 @@ try {
 } catch (e) {
   rates = {};
 }
+
+// --- Generate conversion table for USD/NGN ---
+const usdSellRate = rates.USD_NGN?.sell;
+const usdTableRows = [];
+for (let i = 1; i <= 100; i++) {
+  usdTableRows.push({
+    amount: i,
+    result: typeof usdSellRate === "number" ? (i * usdSellRate).toLocaleString() : "N/A"
+  });
+}
 ---
 
 <!DOCTYPE html>
@@ -52,6 +62,27 @@ try {
     <div class="welcome-box">
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
+    </div>
+
+    <!-- Dollar to Naira Conversion Table -->
+    <div class="usd-convert-box" style="margin:2em 0;">
+      <h2>Quick Dollar (USD) to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (USD)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {usdTableRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
