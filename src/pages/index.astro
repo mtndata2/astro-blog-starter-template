@@ -1,6 +1,8 @@
 ---
 // homepage.astro
 import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 const currencies = [
   { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD", url: "/black-market-usd-ngn-2" },
@@ -35,6 +37,7 @@ try {
     <link rel="stylesheet" href="/src/styles/global.css">
   </head>
   <body>
+<Header />
     <div class="header">
       <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
       <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
@@ -63,5 +66,7 @@ try {
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     </div>
+
+<Footer />
   </body>
 </html>
