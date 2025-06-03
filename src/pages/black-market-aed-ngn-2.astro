@@ -1,0 +1,83 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+
+const API_BASE = "https://astro-blog-starter-template.mtndatasales.workers.dev";
+
+let latest = {};
+try {
+  const res = await fetch(`${API_BASE}/api/latest-rates`);
+  if (res.ok) {
+    const data = await res.json();
+    latest = data.AED_NGN ?? {};
+  }
+} catch (e) { latest = {}; }
+
+let history = [];
+try {
+  const res = await fetch(`${API_BASE}/api/aed-ngn-history`);
+  if (res.ok) history = await res.json();
+} catch (e) { history = []; }
+
+const today = history.at(-1) || {};
+const todayDate = today.date
+  ? `${today.date.slice(6,8)} ${new Date(today.date.slice(0,4)+'-'+today.date.slice(4,6)+'-'+today.date.slice(6,8)).toLocaleString('en-GB',{month:'long'})} ${today.date.slice(0,4)}`
+  : new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+const buyRate = typeof latest.buy === "number" ? latest.buy : today.buy ?? "N/A";
+const sellRate = typeof latest.sell === "number" ? latest.sell : today.sell ?? "N/A";
+
+const yesterday = history.length > 1 ? history.at(-2) : {};
+const buyRateYesterday = typeof yesterday.buy === "number" ? yesterday.buy : null;
+let percentChange = "";
+if (buyRateYesterday && typeof buyRate === "number") {
+  const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 100;
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + "%";
+}
+
+const buyHigh = Math.max(...history.map(h => h.buy ?? -Infinity));
+const buyLow = Math.min(...history.map(h => typeof h.buy === "number" ? h.buy : Infinity));
+const sellHigh = Math.max(...history.map(h => h.sell ?? -Infinity));
+const sellLow = Math.min(...history.map(h => typeof h.sell === "number" ? h.sell : Infinity));
+
+const last7 = history.slice(-7).reverse();
+
+const multiplierRows = [];
+for (let i = 1; i <= 100; i++) {
+  multiplierRows.push({
+    amount: i,
+    result: typeof sellRate === "number" ? (i * sellRate).toLocaleString() : "N/A"
+  });
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dirham (AED) to Naira Black Market Rate - Last 30 Days</title>
+    <meta name="description" content="See the latest AED to NGN black market exchange rates, history, 7-day table, high/low, and a calculator for amounts up to 100." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <Header />
+    <section class="currency-page">
+      <div class="currency-header"><h1>AED to NGN Black Market Rate</h1></div>
+      <div class="summary-box">
+        <b>
+          As of {todayDate}, the exchange rate for 1 Dirham to Nigerian Naira is <span style="color:#166a39;">₦{buyRate}</span>.
+          Compared to yesterday, this represents a
+          <span style={percentChange.startsWith('↓') ? 'color:red;' : 'color:green;'}>{percentChange || '—'}</span> in value.
+        </b>
+        <div style="margin-top:0.8em">
+          If you're planning to buy <b>1 Dirham</b> at street value, the current rate would cost you approximately <span style="color:#166a39;"><b>₦{buyRate}</b></span>.
+        </div>
+        <div style="margin-top:0.5em">
+          Do you have 1 Dirham to sell now? Here is the rate to sell: <span style="color:#166a39;"><b>₦{sellRate}</b></span> for AED.
+        </div>
+      </div>
+      <div id="chart-container" style="margin-bottom: 2em;"><em style="color:#8ba390;">[Chart coming soon]</em></div>
+      <div class="stats-box">
+        <div><b>30d High (Buy):</b> ₦{buyHigh === -Infinity ? "N/A" : buyHigh}</div>
+        <div><b>30d Low (Buy):</b> ₦{buyLow === Infinity ? "N/A" : buyLow}</div>
+        <div><b>30d High (Sell):</b> ₦{sellHigh === -Infinity ? "N/A" : sellHigh}</div>
+        <div><b>30d
