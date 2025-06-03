@@ -437,3 +437,40 @@ body {
   margin-bottom: 6px;
 }
 .rate-row-link:hover .rate-row { text-decoration: underline; color: #166a39; }
+.main-footer {
+  background: #166a39;
+  color: #fff;
+  padding: 2em 1em 1em 1em;
+  text-align: center;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  margin-top: 3em;
+  font-size: 1.08rem;
+  box-shadow: 0 -2px 12px #0002;
+}
+.main-footer nav {
+  margin-bottom: 1em;
+}
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 1.1em;
+  font-weight: 600;
+  transition: text-decoration 0.2s, color 0.2s;
+}
+.footer-link:hover {
+  color: #e6f4ea;
+  text-decoration: underline;
+}
+.footer-desc {
+  margin-bottom: 0.7em;
+  margin-top: 0.3em;
+  font-size: 1.05em;
+  font-style: italic;
+}
+.footer-copy {
+  font-size: 0.98em;
+  opacity: 0.82;
+  margin-top: 0.8em;
+}
+
