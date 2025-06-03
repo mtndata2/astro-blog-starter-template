@@ -1,20 +1,35 @@
 ---
 import "../styles/global.css";
 
-// Helper to get base URL in SSR, fallback to prod if local/dev
+// Helper to get base URL in SSR
 function getBaseUrl(Astro) {
   if (Astro.site) return Astro.site;
   if (Astro.request) return new URL(Astro.request.url).origin;
-  return "https://astro-blog-starter-template.mtndatasales.workers.dev"; // fallback for deploy
+  return "https://astro-blog-starter-template.mtndatasales.workers.dev";
 }
 
-// Get 30d history from API (live) or fallback test data
 let history = [];
+let latest = {};
 try {
   const baseUrl = getBaseUrl(Astro);
+  // Fetch 30-day history
   const res = await fetch(`${baseUrl}/api/usd-ngn-history`);
-  if (res.ok) {
-    history = await res.json();
+  if (res.ok) history = await res.json();
+
+  // Fetch latest rates and patch last day of history
+  const res2 = await fetch(`${baseUrl}/api/latest-rates`);
+  if (res2.ok) {
+    const allRates = await res2.json();
+    latest = allRates.USD_NGN ?? {};
+    if (history.length) {
+      history[history.length - 1] = {
+        ...history[history.length - 1],
+        ...latest,
+      };
+    } else if (latest) {
+      // If no history, fallback to latest only
+      history = [{ date: (new Date()).toISOString().slice(0, 10), ...latest }];
+    }
   }
 } catch (e) {
   // fallback if API is unreachable
@@ -27,9 +42,9 @@ try {
     { date: "2024-05-30", buy: 1535, sell: 1548 },
     { date: "2024-05-31", buy: 1530, sell: 1542 },
     { date: "2024-06-01", buy: 1528, sell: 1540 },
-    { date: "2024-06-02", buy: 1542, sell: 1555 },
-    // ... up to 30 items
+    { date: "2024-06-02", buy: 1542, sell: 1555 }
   ];
+  latest = history.at(-1) || {};
 }
 
 // Calculate 30d high/low
@@ -45,11 +60,9 @@ let last7 = history.slice(-7).reverse();
 const today = history.at(-1) || {};
 const yesterday = history.at(-2) || {};
 const todayDate = today.date
-  ? new Date(
-      today.date.length === 8
-        ? today.date.slice(0, 4) + '-' + today.date.slice(4, 6) + '-' + today.date.slice(6)
-        : today.date
-    )
+  ? (today.date.length === 8 // e.g. 20250531
+      ? new Date(today.date.replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3'))
+      : new Date(today.date))
   : new Date();
 const buyRate = today.buy ?? 'N/A';
 const sellRate = today.sell ?? 'N/A';
@@ -122,9 +135,11 @@ function formatDate(dt) {
         <tbody>
           {last7.map(day => (
             <tr>
-              <td>{day.date?.length === 8
-                ? day.date.slice(6, 8) + '-' + day.date.slice(4, 6) + '-' + day.date.slice(0, 4)
-                : day.date ?? ''}</td>
+              <td>
+                {day.date?.length === 8
+                  ? day.date.replace(/^(\d{4})(\d{2})(\d{2})$/, '$3/$2/$1')
+                  : day.date}
+              </td>
               <td>₦{day.buy ?? "N/A"}</td>
               <td>₦{day.sell ?? "N/A"}</td>
             </tr>
