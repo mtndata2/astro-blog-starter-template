@@ -31,17 +31,18 @@ try {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Nairatoday - Live Black Market Exchange Rates</title>
+    <title>Nairatoday -  Dollar, Pound, Euro, and more to Naira Black Market Exchange Rate Today</title>
     <meta name="description" content="Track naira black market exchange rate: Dollar, Euro, Pound, and more to Naira. Live rates, daily updates." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/global.css">
   </head>
   <body>
 <Header />
-    <div class="header">
-      <h1>Dollar To Naira Black Market Exchange Rate Today</h1>
-      <div class="subtitle">Live rates for Dollar, Pound, Euro, and more</div>
-    </div>
+
+
+<h1 class="main-heading">
+   Dollar, Pound, Euro, and more to Naira Black Market Exchange Rate {todayDate} 
+</h1>
 
     <div class="cards">
       {currencies.map(({ code, label, flag, name, url }) => (
