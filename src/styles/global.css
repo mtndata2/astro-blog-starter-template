@@ -473,4 +473,8 @@ body {
   opacity: 0.82;
   margin-top: 0.8em;
 }
+.currency-page h1 {
+  font-size: 2rem;  /* Default is often 2.5-3rem; set to 2rem or smaller */
+  font-weight: 700;
+}
 
