@@ -61,22 +61,19 @@ const percentChange =
   <body>
     <Header />
 
+    <!-- Summary always at the top for SEO -->
+    <div class="daily-summary" style="margin:1.5em auto 2em auto;max-width:750px;padding:1em 1.2em 1em 1.2em;background:#fff5e6;color:#283b2e;border-radius:10px;font-size:1.08em;">
+      <b>{todayDate}</b>, the Naira to Dollar Black market (Abokifx) exchange rate is
+      <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b> in {cityList}.
+      This suggests that you can now buy at just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>
+      and sell for <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.<br>
+      Yesterday it sold for <b>{yesterdaySell !== "N/A" ? yesterdaySell : "N/A"}</b>,
+      which is just <b>{percentChange !== "N/A" ? percentChange + "%" : "N/A"}</b> of today's rate.
+    </div>
+
     <h1 class="main-heading visually-hidden">
       Dollar, Pound, Euro, and more to Naira Black Market Exchange Rate {todayDate}
     </h1>
-
-    <!-- SEO-rich info block at the very top -->
-    <section style="max-width:740px;margin:2em auto 1.3em auto;padding:1.3em 1.2em;background:#fff;border-radius:12px;">
-      <h2>Dollar to Naira Black Market Rate Today<br>
-      How much is Dollar to Naira Today in Black Market</h2>
-      <p>
-        The Dollar to Naira Black Market rate remains unpredictable as it continues to remain volatile. As a Nigerian who is either involved in payment of school fees abroad or just wants to ship in items from overseas, you have to note that black market or Abokifx rate, officially known as the parallel market rate, often reflects real-time demand and supply on the go. Hence, the market is inherently volatile and most often, movements are against the Naira.
-      </p>
-      <h2>Dollar to Naira Black Market Buying Rate</h2>
-      <p>
-        Today's Dollar to Naira Black Market exchange rate traded at <b>₦1615</b> per $1. This simply means that one Dollar now sells for just <b>1615</b>.
-      </p>
-    </section>
 
     <div class="cards">
       {currencies.map(({ code, label, flag, name, url }, i) => (
@@ -94,16 +91,19 @@ const percentChange =
               </a>
             </div>
           </div>
-          {/* After the Dollar card, insert summary */}
+          {/* Immediately after the Dollar card, insert your SEO-rich content block */}
           {i === 0 && (
-            <div class="daily-summary" style="margin:1.5em auto 2em auto;max-width:750px;padding:1em 1.2em 1em 1.2em;background:#fff5e6;color:#283b2e;border-radius:10px;font-size:1.08em;">
-              <b>{todayDate}</b>, the Naira to Dollar Black market (Abokifx) exchange rate is
-              <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b> in {cityList}.
-              This suggests that you can now buy at just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>
-              and sell for <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.<br>
-              Yesterday it sold for <b>{yesterdaySell !== "N/A" ? yesterdaySell : "N/A"}</b>,
-              which is just <b>{percentChange !== "N/A" ? percentChange + "%" : "N/A"}</b> of today's rate.
-            </div>
+            <section style="max-width:740px;margin:2em auto 1.3em auto;padding:1.3em 1.2em;background:#fff;border-radius:12px;">
+              <h2>Dollar to Naira Black Market Rate Today<br/>
+              How much is Dollar to Naira Today in Black Market</h2>
+              <p>
+                The Dollar to Naira Black Market rate remains unpredictable as it continues to remain volatile. As a Nigerian who is either involved in payment of school fees abroad or just wants to ship in items from overseas, you have to note that black market or Abokifx rate, officially known as the parallel market rate, often reflects real-time demand and supply on the go. Hence, the market is inherently volatile and most often, movements are against the Naira.
+              </p>
+              <h2>Dollar to Naira Black Market Buying Rate</h2>
+              <p>
+                Today's Dollar to Naira Black Market exchange rate traded at <b>₦{todaySell !== "N/A" ? todaySell : "N/A"}</b> per $1. This simply means that one Dollar now sells for just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>.
+              </p>
+            </section>
           )}
         </>
       ))}
