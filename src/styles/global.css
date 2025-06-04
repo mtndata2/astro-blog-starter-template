@@ -555,3 +555,36 @@ h2 {
   word-break: break-word;
   overflow-wrap: anywhere;
 }
+.faq-section {
+  max-width: 720px;
+  margin: 2em auto 0 auto;
+  padding: 2em 1.2em 1em 1.2em;
+  background: #f9fcfa;
+  border-radius: 13px;
+  box-shadow: 0 2px 10px #0001;
+}
+.faq-item h3 {
+  margin: 1em 0 0 0;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-size: 1.12em;
+}
+.faq-item h3:focus, .faq-item h3:hover {
+  color: #166a39;
+  outline: none;
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+  font-size: 1em;
+  margin-bottom: 0.7em;
+  opacity: 0.7;
+  padding-left: 0.6em;
+}
+.faq-item.open .faq-answer {
+  max-height: 300px;  /* large enough for answer */
+  opacity: 1;
+  margin-bottom: 1.2em;
+}
+
