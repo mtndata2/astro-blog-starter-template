@@ -5,6 +5,8 @@ import Footer from "../components/Footer.astro";
 
 const todayDate = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
+const cityList = "Lagos, Abuja, Portharcourt, and Kano";
+
 const currencies = [
   { code: "USD_NGN", label: "Dollar", flag: "🇺🇸", name: "USD", url: "/black-market-usd-ngn-2" },
   { code: "GBP_NGN", label: "Pound", flag: "🇬🇧", name: "GBP", url: "/black-market-gbp-ngn-2" },
@@ -19,36 +21,32 @@ const currencies = [
   { code: "XAF_NGN", label: "XAF", flag: "🌍", name: "XAF", url: "/black-market-xaf-ngn-2" },
 ];
 
-// Fetch all rates
 let rates = {};
+let usdHistory = [];
 try {
   const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/latest-rates");
   rates = await res.json();
 } catch (e) {
   rates = {};
 }
-
-// Fetch USD/NGN history for the summary box
-let history = [];
 try {
   const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/usd-ngn-history");
-  if (res.ok) history = await res.json();
+  if (res.ok) {
+    usdHistory = await res.json();
+  }
 } catch (e) {
-  history = [];
+  usdHistory = [];
 }
 
-const today = history.at(-1) || {};
-const yesterday = history.length > 1 ? history.at(-2) : {};
-const todayBuy = typeof rates.USD_NGN?.buy === "number" ? rates.USD_NGN.buy : today.buy ?? "N/A";
-const todaySell = typeof rates.USD_NGN?.sell === "number" ? rates.USD_NGN.sell : today.sell ?? "N/A";
-const yesterdaySell = typeof yesterday.sell === "number" ? yesterday.sell : null;
-const cityList = "Lagos, Abuja, Portharcourt, and Kano";
-
-let percentChange = "";
-if (yesterdaySell && typeof todaySell === "number") {
-  const pct = ((todaySell - yesterdaySell) / yesterdaySell) * 100;
-  percentChange = Math.abs(pct).toFixed(2);
-}
+const todaySell = rates.USD_NGN?.sell ?? "N/A";
+const todayBuy = rates.USD_NGN?.buy ?? "N/A";
+const yesterdaySell = usdHistory.length > 1 && typeof usdHistory.at(-2)?.sell === "number"
+  ? usdHistory.at(-2).sell
+  : "N/A";
+const percentChange =
+  yesterdaySell !== "N/A" && todaySell !== "N/A" && typeof todaySell === "number" && typeof yesterdaySell === "number"
+    ? (((todaySell - yesterdaySell) / yesterdaySell) * 100).toFixed(2)
+    : "N/A";
 ---
 
 <!DOCTYPE html>
@@ -63,41 +61,44 @@ if (yesterdaySell && typeof todaySell === "number") {
   <body>
     <Header />
 
-    <div class="summary-announcement">
-      <b>{todayDate}</b>, the Naira to Dollar Black market (Abokifx) exchange rate is
-      <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b> in {cityList}.
-      This suggests that you can now buy at just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>
-      and sell for <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.<br>
-      Yesterday it sold for <b>{yesterdaySell !== null ? yesterdaySell : "N/A"}</b>,
-      which is just <b>{percentChange ? percentChange + "%" : "N/A"}</b> of today's rate.
-    </div>
-
     <h1 class="main-heading visually-hidden">
       Dollar, Pound, Euro, and more to Naira Black Market Exchange Rate {todayDate}
     </h1>
 
     <div class="cards">
-      {currencies.map(({ code, label, flag, name, url }) => (
-        <div class="card" key={code}>
-          <div class="flag">{flag}</div>
-          <div class="label">{label} ({name})</div>
-          <a href={url} class="rate-row-link">
-            <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
-            <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
-          </a>
-          <div>
-            <a href={url} class="to-naira-btn">
-              {label} To Naira <span aria-hidden="true">➔</span>
+      {currencies.map(({ code, label, flag, name, url }, i) => (
+        <>
+          <div class="card" key={code}>
+            <div class="flag">{flag}</div>
+            <div class="label">{label} ({name})</div>
+            <a href={url} class="rate-row-link">
+              <div class="rate-row"><b>BUY</b> = ₦{rates[code]?.buy ?? 'N/A'}</div>
+              <div class="rate-row"><b>SELL</b> = ₦{rates[code]?.sell ?? 'N/A'}</div>
             </a>
+            <div style="margin-top:12px;">
+              <a href={url} class="to-naira-btn">
+                {label} To Naira <span aria-hidden="true" style="font-size:1.1em;">➔</span>
+              </a>
+            </div>
           </div>
-        </div>
+          {/* After the Dollar card, insert summary */}
+          {i === 0 && (
+            <div class="daily-summary" style="margin:1.5em auto 2em auto;max-width:750px;padding:1em 1.2em 1em 1.2em;background:#fff5e6;color:#283b2e;border-radius:10px;font-size:1.08em;">
+              <b>{todayDate}</b>, the Naira to Dollar Black market (Abokifx) exchange rate is
+              <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b> in {cityList}.
+              This suggests that you can now buy at just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>
+              and sell for <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.<br>
+              Yesterday it sold for <b>{yesterdaySell !== "N/A" ? yesterdaySell : "N/A"}</b>,
+              which is just <b>{percentChange !== "N/A" ? percentChange + "%" : "N/A"}</b> of today's rate.
+            </div>
+          )}
+        </>
       ))}
     </div>
     <div class="welcome-box">
       <h2>Welcome to Nairatoday.com</h2>
       <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     </div>
-
     <Footer />
   </body>
 </html>
