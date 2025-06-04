@@ -1,0 +1,141 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const API_BASE = "https://astro-blog-starter-template.mtndatasales.workers.dev";
+
+let latest = {};
+try {
+  const res = await fetch(`${API_BASE}/api/latest-rates`);
+  if (res.ok) {
+    const data = await res.json();
+    latest = data.USD_NGN ?? {};
+  }
+} catch (e) { latest = {}; }
+
+let history = [];
+try {
+  const res = await fetch(`${API_BASE}/api/usd-ngn-history`);
+  if (res.ok) history = await res.json();
+} catch (e) { history = []; }
+
+const today = history.at(-1) || {};
+const todayDate = today.date
+  ? `${today.date.slice(6,8)} ${new Date(today.date.slice(0,4)+'-'+today.date.slice(4,6)+'-'+today.date.slice(6,8)).toLocaleString('en-GB',{month:'long'})} ${today.date.slice(0,4)}`
+  : new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+const buyRate1 = typeof latest.buy === "number" ? latest.buy : today.buy ?? "N/A";
+const sellRate1 = typeof latest.sell === "number" ? latest.sell : today.sell ?? "N/A";
+
+// Calculate for 5 USD
+const AMOUNT = 5;
+const buyRate = typeof buyRate1 === "number" ? buyRate1 * AMOUNT : "N/A";
+const sellRate = typeof sellRate1 === "number" ? sellRate1 * AMOUNT : "N/A";
+
+const yesterday = history.length > 1 ? history.at(-2) : {};
+const buyRateYesterday = typeof yesterday.buy === "number" ? yesterday.buy * AMOUNT : null;
+
+let percentChange = "";
+if (buyRateYesterday && typeof buyRate === "number") {
+  const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 100;
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + "%";
+}
+
+const buyHigh = Math.max(...history.map(h => (typeof h.buy === "number" ? h.buy * AMOUNT : -Infinity)));
+const buyLow = Math.min(...history.map(h => (typeof h.buy === "number" ? h.buy * AMOUNT : Infinity)));
+const sellHigh = Math.max(...history.map(h => (typeof h.sell === "number" ? h.sell * AMOUNT : -Infinity)));
+const sellLow = Math.min(...history.map(h => (typeof h.sell === "number" ? h.sell * AMOUNT : Infinity)));
+
+const last7 = history.slice(-7).reverse().map(day => ({
+  ...day,
+  buy: typeof day.buy === "number" ? day.buy * AMOUNT : "N/A",
+  sell: typeof day.sell === "number" ? day.sell * AMOUNT : "N/A"
+}));
+
+const multiplierRows = [];
+for (let i = 1; i <= 20; i++) {
+  multiplierRows.push({
+    amount: i * AMOUNT,
+    result: typeof sellRate1 === "number" ? (i * AMOUNT * sellRate1).toLocaleString() : "N/A"
+  });
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>5 Dollar (USD) to Naira Black Market Rate</title>
+    <meta name="description" content="Get the latest 5 USD to NGN black market rate, 7-day history, high/low and a quick converter table for bulk amounts." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <Header />
+
+    <section class="currency-page">
+      <div class="currency-header"><h1>5 Dollar (USD) to Naira Black Market Rate {todayDate} Abokifx</h1></div>
+      <div class="summary-box">
+        <b>
+          As of {todayDate}, the exchange rate for <b>5 Dollars</b> to Nigerian Naira is <span style="color:#166a39;">₦{typeof buyRate === "number" ? buyRate.toLocaleString() : buyRate}</span> (buy), <span style="color:#166a39;">₦{typeof sellRate === "number" ? sellRate.toLocaleString() : sellRate}</span> (sell).
+          Compared to yesterday, this represents a
+          <span style={percentChange.startsWith('↓') ? 'color:red;' : 'color:green;'}>{percentChange || '—'}</span> in value.
+        </b>
+        <div style="margin-top:0.8em">
+          If you're planning to buy <b>5 Dollars</b> at street value, the current rate would cost you approximately <span style="color:#166a39;"><b>₦{typeof buyRate === "number" ? buyRate.toLocaleString() : buyRate}</b></span>.
+        </div>
+        <div style="margin-top:0.5em">
+          Do you have 5 Dollars to sell? Here is the rate to sell: <span style="color:#166a39;"><b>₦{typeof sellRate === "number" ? sellRate.toLocaleString() : sellRate}</b></span> for 5 USD.
+        </div>
+      </div>
+      <div id="chart-container" style="margin-bottom: 2em;"><em style="color:#8ba390;">[Chart coming soon]</em></div>
+      <div class="stats-box">
+        <div><b>30d High (Buy, 5 USD):</b> ₦{buyHigh === -Infinity ? "N/A" : buyHigh.toLocaleString()}</div>
+        <div><b>30d Low (Buy, 5 USD):</b> ₦{buyLow === Infinity ? "N/A" : buyLow.toLocaleString()}</div>
+        <div><b>30d High (Sell, 5 USD):</b> ₦{sellHigh === -Infinity ? "N/A" : sellHigh.toLocaleString()}</div>
+        <div><b>30d Low (Sell, 5 USD):</b> ₦{sellLow === Infinity ? "N/A" : sellLow.toLocaleString()}</div>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Buy (₦)</th>
+            <th>Sell (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {last7.map(day => (
+            <tr>
+              <td>
+                {day.date
+                  ? `${day.date.slice(6,8)} ${new Date(day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8)).toLocaleString('en-GB',{month:'short'})} ${day.date.slice(0,4)}`
+                  : "-"}
+              </td>
+              <td>₦{typeof day.buy === "number" ? day.buy.toLocaleString() : "N/A"}</td>
+              <td>₦{typeof day.sell === "number" ? day.sell.toLocaleString() : "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <!-- Amount Calculator Table -->
+      <h2 style="margin-top:2em;">Quick Bulk Dollar to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (USD)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {multiplierRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+    <Footer />
+  </body>
+</html>
