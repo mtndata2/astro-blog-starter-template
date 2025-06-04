@@ -47,6 +47,8 @@ const percentChange =
   yesterdaySell !== "N/A" && todaySell !== "N/A" && typeof todaySell === "number" && typeof yesterdaySell === "number"
     ? (((todaySell - yesterdaySell) / yesterdaySell) * 100).toFixed(2)
     : "N/A";
+
+const last7 = usdHistory.slice(-7).reverse();
 ---
 
 <!DOCTYPE html>
@@ -103,122 +105,140 @@ const percentChange =
               <p>
                 Today's Dollar to Naira Black Market exchange rate traded at <b>₦{todaySell !== "N/A" ? todaySell : "N/A"}</b> per $1. This simply means that one Dollar now sells for just <b>{todaySell !== "N/A" ? todaySell : "N/A"}</b>.
               </p>
-                <h2>Dollar to Naira Black Market selling Rate</h2>
-               <p>
-  Today's Dollar to Naira Black Market <b>buying</b> exchange rate traded at <b>₦{todayBuy !== "N/A" ? todayBuy : "N/A"}</b> per $1.
-  This simply means that you can buy one Dollar for just <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.
-</p>
-
+              <h2>Dollar to Naira Black Market selling Rate</h2>
+              <p>
+                Today's Dollar to Naira Black Market <b>buying</b> exchange rate traded at <b>₦{todayBuy !== "N/A" ? todayBuy : "N/A"}</b> per $1.
+                This simply means that you can buy one Dollar for just <b>{todayBuy !== "N/A" ? todayBuy : "N/A"}</b>.
+              </p>
             </section>
           )}
         </>
       ))}
     </div>
+
     <div class="welcome-box">
-<!-- ... (all your previous code/cards/summaries here) ... -->
-
-<div class="info-section" style="max-width:720px;margin:2.7em auto 0 auto;background:#f9fcfa;border-radius:13px;padding:2em 1.3em;box-shadow:0 2px 10px #0001;">
-  <h2>Why is the Black Market Rate higher than the Official Rate?</h2>
-  <p>
-    Just like you all know, the Central Bank of Nigeria (CBN) is mandated to regulate Nigeria's foreign currency supply, which means they oversee the supply chain—and history has proven that the supply has never been enough to cool down the market or meet the increasing demand. Consequently, this scarcity of much-needed dollars forces Nigerians and business entities to keep patronising the parallel market, because dollars can be gotten at any point in time but at a much higher price.
-  </p>
-  <p>
-    Moreover, Nigeria being a largely import-dependent nation consistently faces quite high demand for dollars. There are several factors responsible for this trend, including imports, travel, education, and commercial activities. Because the Central Bank of Nigeria cannot clear the backlog demand for dollars, businesses and individuals now source it wherever they can.
-  </p>
-  <p>
-    Additionally, inconsistency in Nigerian government policies and a tight grip on currency controls have been noted to contribute significantly to widening the gap between the Central Bank of Nigeria (official rate) and the black market rates. Many bottlenecks exist in the banking sector when it comes to accessing dollars, making the parallel market thrive.
-  </p>
-  
-  <h2>Tips for Safely Exchanging Currency</h2>
-  <p>
-    Whenever you visit roadside dealers to exchange currency, it is very necessary to adhere to the tips listed below—this will help you protect yourself and ensure your transaction goes smoothly:
-  </p>
-  <ul>
-    <li><b>Deal with reliable and trusted agents:</b> Always deal with exchangers that have a physical presence. Not just online presence, but face-to-face transactions in a safe environment.</li>
-    <li><b>Check rates online beforehand:</b> Research the current rates on our platform before you proceed with any transaction. Although there might be a little difference, this will guide you.</li>
-    <li><b>Avoid peak hours:</b> If you want to buy, then target the end of the month or December—these periods rates are low.</li>
-  </ul>
-</div>
-<div class="info-section" style="max-width:720px;margin:2.7em auto 0 auto;background:#f9fcfa;border-radius:13px;padding:2em 1.3em;box-shadow:0 2px 10px #0001;">
-  <h2>Where Do Nigerians Check Black Market Rates?</h2>
-
-  <h3>Bureau De Change Operators</h3>
-  <p>
-    One of the popular places to quickly get a view of what goes on is the Bureau De Change Operators. Note that Bureau De Change (BDC) operators are licensed to operate by the Nigerian government. We also want you to know that there might be discrepancies in rates and it’s largely dependent on location. So don't get surprised if Lagos is cheaper than Abuja.
-  </p>
-
-  <h3>Online Sources and Forex Blogs</h3>
-  <p>
-    A popular way most Nigerians and those who are tech-savvy stay updated on rates is via online media. Surfing and visiting online blogs like <b>Nairatoday.com</b> helps them get full insight on the ever-changing rates—and you can do this from the comfort of your home. We have our algorithm here that updates prices to reflect what’s playing out there.
-  </p>
-
-  <h3>Social Media and Word of Mouth</h3>
-  <p>
-    Social media platforms are important sources of information. Giants like Twitter, Facebook, and even WhatsApp groups can serve as great sources to get real, up-to-date price trends. Additionally, word of mouth has also been known to help disseminate information—not just on finance but on other topics of interest, and currency rates are not left out.
-  </p>
-
-  <h3>Conclusion</h3>
-  <p>
-    Dollar To Naira Black Market Today has been updated above, together with other currencies. Feel free to browse all pages. We encourage you to keep visiting this page or refreshing your app to get the latest updates. Always note that rates are dependent on location and individual dealers.
-  </p>
-</div>
-<div class="faq-section">
-  <h2>Frequently Asked Questions (FAQs)</h2>
-  
-  <div class="faq-item">
-    <h3 tabindex="0">How much is $1 in Naira today in the black market?</h3>
-    <div class="faq-answer">
-      As of today, the Dollar to Naira Black Market exchange sells for <b>₦{todaySell !== "N/A" ? todaySell : "N/A"}</b> per $1. This is the rate you should have in mind while going out to buy dollar at black market exchange rate.
+      <!-- ... (all your previous code/cards/summaries here) ... -->
     </div>
-  </div>
-  <div class="faq-item">
-    <h3 tabindex="0">How much is $100 in the Naira market today?</h3>
-    <div class="faq-answer">
-      As of today, our algorithm computes the rate of 100 Dollars to Naira and the figure is <b>₦{typeof todaySell === "number" ? (100 * todaySell).toLocaleString() : "N/A"}</b>. This means that if you have $100 you will change it for this amount in Naira.
-    </div>
-  </div>
-  <div class="faq-item">
-    <h3 tabindex="0">How much is $500 in Nigeria?</h3>
-    <div class="faq-answer">
-      As at today, you will change $500 Dollar for <b>₦{typeof todaySell === "number" ? (500 * todaySell).toLocaleString() : "N/A"}</b>. This was calculated using the current exchange rate as seen in the market today.
-    </div>
-  </div>
-  <div class="faq-item">
-    <h3 tabindex="0">10 dollars to Naira rate</h3>
-    <div class="faq-answer">
-      10 Dollars to Naira Black Market rate today is <b>₦{typeof todaySell === "number" ? (10 * todaySell).toLocaleString() : "N/A"}</b>. This rate was arrived at using today's exchange rate. Don't worry, we calculated it automatically using a reliable system.
-    </div>
-  </div>
-  <div class="faq-item">
-    <h3 tabindex="0">20 dollars to Naira Black Market Rate</h3>
-    <div class="faq-answer">
-      20 dollars exchanges for approximately <b>₦{typeof todaySell === "number" ? (20 * todaySell).toLocaleString() : "N/A"}</b>. Since 1 dollar is {todaySell !== "N/A" ? todaySell : "N/A"}, then 20 dollars is calculated using that rate. We have a reliable system that never fails calculation.
-    </div>
-  </div>
-</div>
 
+    <!-- Last 7 Days Table, inserted before info-section as requested -->
+    <h2 style="max-width:720px;margin:2.2em auto 0.8em auto;padding:0 1.2em;">Last 7 Days Dollar to Naira Black Market Rate</h2>
+    <table class="history-table" style="max-width:720px;margin:0 auto 2em auto;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Buy</th>
+          <th>Sell</th>
+        </tr>
+      </thead>
+      <tbody>
+        {last7.map(day => (
+          <tr>
+            <td>
+              {day.date
+                ? `${day.date.slice(6,8)} ${new Date(day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8)).toLocaleString('en-GB',{month:'short'})} ${day.date.slice(0,4)}`
+                : "-"}
+            </td>
+            <td>₦{typeof day.buy === "number" ? day.buy : "N/A"}</td>
+            <td>₦{typeof day.sell === "number" ? day.sell : "N/A"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
 
-      <h2>Welcome to Nairatoday.com</h2>
-      <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
+    <!-- Info section starts here (nothing changed below this point) -->
+    <div class="info-section" style="max-width:720px;margin:2.7em auto 0 auto;background:#f9fcfa;border-radius:13px;padding:2em 1.3em;box-shadow:0 2px 10px #0001;">
+      <h2>Why is the Black Market Rate higher than the Official Rate?</h2>
+      <p>
+        Just like you all know, the Central Bank of Nigeria (CBN) is mandated to regulate Nigeria's foreign currency supply, which means they oversee the supply chain—and history has proven that the supply has never been enough to cool down the market or meet the increasing demand. Consequently, this scarcity of much-needed dollars forces Nigerians and business entities to keep patronising the parallel market, because dollars can be gotten at any point in time but at a much higher price.
+      </p>
+      <p>
+        Moreover, Nigeria being a largely import-dependent nation consistently faces quite high demand for dollars. There are several factors responsible for this trend, including imports, travel, education, and commercial activities. Because the Central Bank of Nigeria cannot clear the backlog demand for dollars, businesses and individuals now source it wherever they can.
+      </p>
+      <p>
+        Additionally, inconsistency in Nigerian government policies and a tight grip on currency controls have been noted to contribute significantly to widening the gap between the Central Bank of Nigeria (official rate) and the black market rates. Many bottlenecks exist in the banking sector when it comes to accessing dollars, making the parallel market thrive.
+      </p>
+      
+      <h2>Tips for Safely Exchanging Currency</h2>
+      <p>
+        Whenever you visit roadside dealers to exchange currency, it is very necessary to adhere to the tips listed below—this will help you protect yourself and ensure your transaction goes smoothly:
+      </p>
+      <ul>
+        <li><b>Deal with reliable and trusted agents:</b> Always deal with exchangers that have a physical presence. Not just online presence, but face-to-face transactions in a safe environment.</li>
+        <li><b>Check rates online beforehand:</b> Research the current rates on our platform before you proceed with any transaction. Although there might be a little difference, this will guide you.</li>
+        <li><b>Avoid peak hours:</b> If you want to buy, then target the end of the month or December—these periods rates are low.</li>
+      </ul>
     </div>
+    <div class="info-section" style="max-width:720px;margin:2.7em auto 0 auto;background:#f9fcfa;border-radius:13px;padding:2em 1.3em;box-shadow:0 2px 10px #0001;">
+      <h2>Where Do Nigerians Check Black Market Rates?</h2>
+      <h3>Bureau De Change Operators</h3>
+      <p>
+        One of the popular places to quickly get a view of what goes on is the Bureau De Change Operators. Note that Bureau De Change (BDC) operators are licensed to operate by the Nigerian government. We also want you to know that there might be discrepancies in rates and it’s largely dependent on location. So don't get surprised if Lagos is cheaper than Abuja.
+      </p>
+      <h3>Online Sources and Forex Blogs</h3>
+      <p>
+        A popular way most Nigerians and those who are tech-savvy stay updated on rates is via online media. Surfing and visiting online blogs like <b>Nairatoday.com</b> helps them get full insight on the ever-changing rates—and you can do this from the comfort of your home. We have our algorithm here that updates prices to reflect what’s playing out there.
+      </p>
+      <h3>Social Media and Word of Mouth</h3>
+      <p>
+        Social media platforms are important sources of information. Giants like Twitter, Facebook, and even WhatsApp groups can serve as great sources to get real, up-to-date price trends. Additionally, word of mouth has also been known to help disseminate information—not just on finance but on other topics of interest, and currency rates are not left out.
+      </p>
+      <h3>Conclusion</h3>
+      <p>
+        Dollar To Naira Black Market Today has been updated above, together with other currencies. Feel free to browse all pages. We encourage you to keep visiting this page or refreshing your app to get the latest updates. Always note that rates are dependent on location and individual dealers.
+      </p>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions (FAQs)</h2>
+      <div class="faq-item">
+        <h3 tabindex="0">How much is $1 in Naira today in the black market?</h3>
+        <div class="faq-answer">
+          As of today, the Dollar to Naira Black Market exchange sells for <b>₦{todaySell !== "N/A" ? todaySell : "N/A"}</b> per $1. This is the rate you should have in mind while going out to buy dollar at black market exchange rate.
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3 tabindex="0">How much is $100 in the Naira market today?</h3>
+        <div class="faq-answer">
+          As of today, our algorithm computes the rate of 100 Dollars to Naira and the figure is <b>₦{typeof todaySell === "number" ? (100 * todaySell).toLocaleString() : "N/A"}</b>. This means that if you have $100 you will change it for this amount in Naira.
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3 tabindex="0">How much is $500 in Nigeria?</h3>
+        <div class="faq-answer">
+          As at today, you will change $500 Dollar for <b>₦{typeof todaySell === "number" ? (500 * todaySell).toLocaleString() : "N/A"}</b>. This was calculated using the current exchange rate as seen in the market today.
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3 tabindex="0">10 dollars to Naira rate</h3>
+        <div class="faq-answer">
+          10 Dollars to Naira Black Market rate today is <b>₦{typeof todaySell === "number" ? (10 * todaySell).toLocaleString() : "N/A"}</b>. This rate was arrived at using today's exchange rate. Don't worry, we calculated it automatically using a reliable system.
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3 tabindex="0">20 dollars to Naira Black Market Rate</h3>
+        <div class="faq-answer">
+          20 dollars exchanges for approximately <b>₦{typeof todaySell === "number" ? (20 * todaySell).toLocaleString() : "N/A"}</b>. Since 1 dollar is {todaySell !== "N/A" ? todaySell : "N/A"}, then 20 dollars is calculated using that rate. We have a reliable system that never fails calculation.
+        </div>
+      </div>
+    </div>
+    <h2>Welcome to Nairatoday.com</h2>
+    <p>Your trusted source for real-time updates on the Dollar to Naira Black Market exchange rate. We provide accurate, up-to-date information to help you stay informed and make smarter financial decisions.</p>
     <Footer />
-<script is:inline>
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.faq-item h3').forEach(h3 => {
-    h3.addEventListener('click', function() {
-      const item = this.parentElement;
-      item.classList.toggle('open');
-    });
-    // Accessibility: toggle with Enter/Space key
-    h3.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        this.click();
-      }
-    });
-  });
-});
-</script>
-
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.faq-item h3').forEach(h3 => {
+          h3.addEventListener('click', function() {
+            const item = this.parentElement;
+            item.classList.toggle('open');
+          });
+          // Accessibility: toggle with Enter/Space key
+          h3.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.click();
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>
