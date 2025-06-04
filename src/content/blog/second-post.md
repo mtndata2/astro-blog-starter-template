@@ -1,16 +1,46 @@
 ---
-title: "Second post"
-description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 15 2022"
-heroImage: "/blog-placeholder-4.jpg"
+title: "Promoting The Wrong People? This Tips Help You Get The Best People in Rightful Places"
+description: "Avoid promoting the wrong people at work! Discover actionable tips to ensure you select the right employees for promotions and leadership roles."
+topic: promoting-the-wrong-people-this-tips-help-you-get-the-best-people-in-rightful-places
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+**Promoting The Wrong People? This Tips Help You Get The Best People in Rightful Places**
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
+Not everyone working at a company actually deserves the role they are playing or the pay they receive monthly. Many of them do not even deserve to work with the company at all. The mistakes most establishments make is employing the wrong people for managerial roles. It could be a deadly mistake if you as a company owner ends up promoting the wrong people.
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+There are people who work for you and are due to be promoted, but lack of information available to you might make you promote other workers who do not fit into the post. However, this can actually be avoided if the business owner knows what he should look at when employing or promoting his staff.
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
+This article will elaborate on the topic "How to avoid promoting the wrong people". So what are they? Let's ride!
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+## Consider and act accordingly to every staff's strength
+
+Every worker or member of staff of your company has a level to which they can perform. That is, they have their individual strengths and weaknesses. As an employer of labour, you should be aware of this information about your staff and play to it.
+
+Whenever a worker tends to do well in their designated field, do not assume that they will also do well in every other field. This happens at times, but it is usually not the case. Your worker might be excelling in that field because of the experience he or she must have had previously. Assuming he or she will do well in other areas and ending up giving them such posts might leave them blank of ideas.
+
+So basically, this is what you should do when considering this factor: examine the strengths and weaknesses of each and every one of them. This will help you know where they can survive and excel and where they cannot.
+
+## Keep yourself informed by your own personal data
+
+It is mandatory for every employer to monitor or keep an eye on an employee who is due or about to be promoted. During this period of monitoring them, you should collect important information about them like their skills, abilities, strong and weak points, listening skills, speaking skills, interaction, influential abilities, etc.
+
+When you take note of all these, you will be able to ascertain if the employee you are about to promote is actually fit for the position or post you need him to manage. It is very important for you as the employer to take these notes yourself as there could be discrepancies when someone else does it for you. Also, since you are the one employing, doing it all by yourself will prevent the whole work from being too cumbersome for you to do.
+
+## Bringing up new titles
+
+Many times, you might have thought an employee is due for promotion but the employee might not be ready for it. This does not mean he or she will not accept the promotion offer. Let us have a practical example. You own a school and you have an eye on a teacher. You want to promote him or her to the post of a head teacher, but you feel he isn't quite ready.
+
+Here is what you should do: give him or her the post of a supervisor, rate the performances and see if he or she truly appreciates the new position. Also, during this period in this new position as supervisor, you will ascertain if he is truly fit for the post of the head teacher which you have for him. It will also let him know that you have a promotion offer for him ahead of time and keep him abreast. This process can help prevent you from making hasty decisions and also help your employee in preparing for the new role.
+
+## Lend a helping hand
+
+If you feel like the aforementioned process might take time and also look tedious, you might choose to offer the employee the promotional offer immediately and not go through the probation stage. Actually, it is okay if you do this. Rome was not built in a day - everything takes time. Giving your employee promotion to a new job position means he or she will have to start doing things he has not been doing. The new position will have new roles which your employee might not be used to yet.
+
+How do you solve this? Offer a helping hand. Support the employee in his new position. Ensure you make every resource he will need for the proper functioning of the new office available. Asides from this, you can also offer emotional support. Praise him regularly. Make sure he gets all the praises he deserves. This will encourage him to keep working well and harder for the growth of the company. It will also help to relieve the stress and tension he might be facing. In addition, it will prevent unnecessary pressure on him.
+
+## Set clear goals
+
+This is very important especially when you are taking in new recruits to work for you. Whenever you are putting out a job description, ensure it is well detailed. Let the specifications, requirements, responsibilities, targets etc be outlined so whoever is applying for that position knows everything about it, and prevents unnecessary expectations on their side.
+
+This also works for promotional purposes. If you already have an employee you want to promote, you can discuss all these with him or her so they know ahead of time all that is required of them. They will know what to do if they are finally offered the post. This can also help save a lot of time that would have been used to correct the employees or remind them of what they are and are not to do.
+
