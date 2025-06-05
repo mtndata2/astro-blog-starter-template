@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ locals }) => {
     ];
     let rates: Record<string, any> = {};
     for (const code of codes) {
-      rates[code] = await kv.get(`${code}_TODAY`, "json");
+      rates[code] = await kv.get(`${code}:today`, "json");
     }
     return new Response(JSON.stringify(rates), {
       headers: {
