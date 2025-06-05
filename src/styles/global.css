@@ -597,3 +597,16 @@ h2 {
   text-align: left; /* Keep text aligned left for readability */
 }
 
+
+.blog-title {
+  font-size: 2.2rem;
+  line-height: 1.2;
+  margin-bottom: 0.8em;
+}
+
+@media (max-width: 540px) {
+  .blog-title {
+    font-size: 1.3rem;  /* Smaller size for phones */
+    line-height: 1.15;
+  }
+}
