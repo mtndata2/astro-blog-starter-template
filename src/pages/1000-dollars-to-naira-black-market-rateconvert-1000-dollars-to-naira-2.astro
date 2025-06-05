@@ -1,0 +1,196 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const API_BASE = "https://astro-blog-starter-template.mtndatasales.workers.dev";
+
+// Fetch latest USD_NGN rates
+let latest = {};
+try {
+  const res = await fetch(`${API_BASE}/api/latest-rates`);
+  if (res.ok) {
+    const data = await res.json();
+    latest = data.USD_NGN ?? {};
+  }
+} catch (e) { latest = {}; }
+
+// Fetch history
+let history = [];
+try {
+  const res = await fetch(`${API_BASE}/api/usd-ngn-history`);
+  if (res.ok) history = await res.json();
+} catch (e) { history = []; }
+
+const today = history.at(-1) || {};
+const todayDate = today.date
+  ? `${today.date.slice(6,8)} ${new Date(today.date.slice(0,4)+'-'+today.date.slice(4,6)+'-'+today.date.slice(6,8)).toLocaleString('en-GB',{month:'long'})} ${today.date.slice(0,4)}`
+  : new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+const buyRate1 = typeof latest.buy === "number" ? latest.buy : today.buy ?? "N/A";
+const sellRate1 = typeof latest.sell === "number" ? latest.sell : today.sell ?? "N/A";
+
+// Calculate for 1000 USD
+const buyRate = typeof buyRate1 === "number" ? buyRate1 * 1000 : "N/A";
+const sellRate = typeof sellRate1 === "number" ? sellRate1 * 1000 : "N/A";
+
+const yesterday = history.length > 1 ? history.at(-2) : {};
+const buyRateYesterday = typeof yesterday.buy === "number" ? yesterday.buy * 1000 : null;
+
+let percentChange = "";
+if (buyRateYesterday && typeof buyRate === "number") {
+  const pct = ((buyRate - buyRateYesterday) / buyRateYesterday) * 1000;
+  percentChange = (pct > 0 ? '↑' : '↓') + ' ' + Math.abs(pct).toFixed(2) + "%";
+}
+
+const buyHigh = Math.max(...history.map(h => (typeof h.buy === "number" ? h.buy * 1000 : -Infinity)));
+const buyLow = Math.min(...history.map(h => (typeof h.buy === "number" ? h.buy * 1000 : Infinity)));
+const sellHigh = Math.max(...history.map(h => (typeof h.sell === "number" ? h.sell * 1000 : -Infinity)));
+const sellLow = Math.min(...history.map(h => (typeof h.sell === "number" ? h.sell * 1000 : Infinity)));
+
+const last7 = history.slice(-7).reverse().map(day => ({
+  ...day,
+  buy: typeof day.buy === "number" ? day.buy * 1000 : "N/A",
+  sell: typeof day.sell === "number" ? day.sell * 1000 : "N/A"
+}));
+
+const multiplierRows = [];
+for (let i = 1; i <= 1000; i++) {
+  multiplierRows.push({
+    amount: i * 1000,
+    result: typeof sellRate1 === "number" ? (i * 1000 * sellRate1).toLocaleString() : "N/A"
+  });
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>1000 Dollar (USD) to Naira Black Market Rate</title>
+    <meta name="description" content="Check the latest 1000 USD to NGN black market rate, 7-day table, high/low, and a calculator for bulk amounts." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <Header />
+
+    <section class="currency-page">
+      <div class="currency-header"><h1>1000 Dollar (USD) to Naira Black Market Rate {todayDate} Abokifx</h1></div>
+      <div class="summary-box">
+        <b>
+          As of {todayDate}, the exchange rate for <b>1000 Dollars</b> to Nigerian Naira is <span style="color:#166a39;">₦{typeof buyRate === "number" ? buyRate.toLocaleString() : buyRate}</span> (buy), <span style="color:#166a39;">₦{typeof sellRate === "number" ? sellRate.toLocaleString() : sellRate}</span> (sell).
+          Compared to yesterday, this represents a
+          <span style={percentChange.startsWith('↓') ? 'color:red;' : 'color:green;'}>{percentChange || '—'}</span> in value.
+        </b>
+        <div style="margin-top:0.8em">
+          If you're planning to buy <b>1000 Dollars</b> at street value, the current rate would cost you approximately <span style="color:#166a39;"><b>₦{typeof buyRate === "number" ? buyRate.toLocaleString() : buyRate}</b></span>.
+        </div>
+        <div style="margin-top:0.5em">
+          Do you have 1000 Dollars to sell? Here is the rate to sell: <span style="color:#166a39;"><b>₦{typeof sellRate === "number" ? sellRate.toLocaleString() : sellRate}</b></span> for 1000 USD.
+        </div>
+      </div>
+      <div id="chart-container" style="margin-bottom: 2em;"><em style="color:#8ba390;">[Chart coming soon]</em></div>
+      <div class="stats-box">
+        <div><b>30d High (Buy, 1000 USD):</b> ₦{buyHigh === -Infinity ? "N/A" : buyHigh.toLocaleString()}</div>
+        <div><b>30d Low (Buy, 1000 USD):</b> ₦{buyLow === Infinity ? "N/A" : buyLow.toLocaleString()}</div>
+        <div><b>30d High (Sell, 1000 USD):</b> ₦{sellHigh === -Infinity ? "N/A" : sellHigh.toLocaleString()}</div>
+        <div><b>30d Low (Sell, 1000 USD):</b> ₦{sellLow === Infinity ? "N/A" : sellLow.toLocaleString()}</div>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Buy (₦)</th>
+            <th>Sell (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {last7.map(day => (
+            <tr>
+              <td>
+                {day.date
+                  ? `${day.date.slice(6,8)} ${new Date(day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8)).toLocaleString('en-GB',{month:'short'})} ${day.date.slice(0,4)}`
+                  : "-"}
+              </td>
+              <td>₦{typeof day.buy === "number" ? day.buy.toLocaleString() : "N/A"}</td>
+              <td>₦{typeof day.sell === "number" ? day.sell.toLocaleString() : "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <!-- Amount Calculator Table -->
+      <h2 style="margin-top:2em;">Quick Bulk Dollar to Naira Converter Table</h2>
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Amount (USD)</th>
+            <th>Equivalent (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {multiplierRows.map(row => (
+            <tr>
+              <td>{row.amount}</td>
+              <td>₦{row.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+<article class="centered-article">
+  <h1>1000 Dollar to Naira Black Market Rate Today [date]</h1>
+
+  <p>Remember that the currency symbol for Dollar (US Dollar) is $. All figures here are for information purposes ONLY.</p>
+  <p>Our team are constantly monitoring the USD/NGN (Dollar to Naira) exchange rate and updating accordingly.</p>
+  <p>Have you ever asked “how much is Dollar to Naira exchange rate?” In this article you will get the Dollar to Naira exchange rate for black market, including how much <b>1000 Dollars</b> is in Naira today.</p>
+  <p>The Dollar to Naira exchange rate seems not stable; it fluctuates from time to time against the Naira, leading to the Naira losing most of its value.</p>
+
+  <h2>Currency Converter Impact</h2>
+  <p>This means that Nigerians are likely to spend more buying goods and services in the international market.</p>
+  <p>The Dollar/Naira has not had a smooth ride ever since 1986. The relationship between both currencies has been unpredictable, leaving the economy of Nigeria poorer, although a few people have been able to capitalize on the weaknesses of the Naira to make a fortune out of it.</p>
+
+  <h2>Historical Context: Key Policy Eras</h2>
+
+  <h3>President Ibrahim Babangida’s Second-Tier Foreign Exchange Market (SFEM)</h3>
+  <p>The SFEM was a product of the IMF and was introduced during the Babangida regime. The administration had no choice but to accept the conditionality due to economic pressures.</p>
+  <p>It will be recalled that before this (around the 70s), the Naira enjoyed a better exchange rate against the Dollar. But by 1993, after Babangida’s regime ended, the Naira had shed much of its value.</p>
+  <p>The country had to introduce the bureaux de change. However, things didn’t improve as expected. A weaker Naira didn’t bring the expected industrial growth as seen in countries like China.</p>
+
+  <h3>President Sani Abacha (1993-1998)</h3>
+  <p>Abacha held the Naira with an iron grip for five years. The Autonomous Foreign Exchange Market (AFEM) was introduced to manage Naira sales. Oil prices were low, and Nigeria faced economic sanctions, leaving limited dollars in the system.</p>
+  <p>The government managed a rigid exchange rate, which experts believe gave birth to the forex black market. The black market became very pronounced during this period.</p>
+  <p>While the official rate was about twenty Naira, the black market was significantly higher.</p>
+
+  <h3>Joseph Sanusi (CBN Governor 1999–2004)</h3>
+  <p>Post-military, Joseph Sanusi introduced the Interbank Foreign Exchange Market (IFEM) to reduce the gap between official and black market rates. At the time, Nigeria was under heavy debt pressure.</p>
+  <p>The IFEM later collapsed due to stress on the Naira. Banks were instructed to limit Dollar sales.</p>
+
+  <h3>Chukwuma Soludo (2004–2009) and the Oil Boom</h3>
+  <p>With rising oil prices, Nigeria obtained debt relief and set up the Excess Crude Account (ECA). Multiple exchange rates existed, but Soludo harmonized them and allowed forex use for medical bills and credit cards.</p>
+  <p>This reduced black market activity. Even when oil prices dropped, Nigerians didn’t feel much impact thanks to sufficient Dollar reserves.</p>
+
+  <h3>Sanusi Lamido Sanusi (June 2009–Feb 2014)</h3>
+  <p>Sanusi reversed Soludo’s ban on Interbank and WDAS markets. However, Nigeria failed to build up reserves despite higher oil prices. The exchange rate was stable during his tenure.</p>
+
+  <h3>Godwin Emefiele and the Present</h3>
+  <p>Due to oil price collapse, Dollar inflow reduced. The government responded with bans on the Interbank market and 41 import items. Forex was allocated selectively.</p>
+
+  <h2>Facts about USD and Naira</h2>
+  <ul>
+    <li>Nigeria relies on the USD to pay for imports.</li>
+    <li>The first USD coin appeared in 1794, and paper money in 1862.</li>
+    <li>Over $1.54 trillion in USD is in circulation; 97% is Federal Reserve notes.</li>
+    <li>38 million notes worth $541 million are printed daily.</li>
+    <li>Over 70% of new notes replace old ones.</li>
+    <li>Coins are made of zinc and copper and can last 25 years.</li>
+    <li>Americans throw away $62 million worth of coins yearly.</li>
+  </ul>
+
+  <h2>Should There Be a Black Market?</h2>
+  <p>Some argue that the black market causes harm, which led to the suspension of Dollar sales to BDCs. However, the black market helps ordinary Nigerians access Dollars when banks can’t supply them.</p>
+  <p>The government should regulate it better, penalize violators, and ensure money stays within the banking system. Establishing local refineries and boosting agriculture (especially in the North) with better security would also help stabilize the Naira.</p>
+</article>
+
+    </section>
+    <Footer />
+  </body>
+</html>
