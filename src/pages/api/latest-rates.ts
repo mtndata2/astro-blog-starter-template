@@ -19,7 +19,10 @@ export const GET: APIRoute = async ({ locals }) => {
       rates[code] = await kv.get(`${code}_TODAY`, "json");
     }
     return new Response(JSON.stringify(rates), {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store", // <-- disables all caching!
+      },
     });
   } catch (e) {
     return new Response(
