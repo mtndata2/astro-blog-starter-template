@@ -1,35 +1,26 @@
 ---
-import "../styles/global.css";
-import Header from "../components/Header.astro";
 import LiveRates from "../components/LiveRates.jsx";
 ---
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>USD to NGN Black Market Rate</title>
-    <meta name="description" content="Live USD to Naira black market rate" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Currency Rates</title>
   </head>
   <body>
-    <Header />
+    <p>
+      USD Sell Rate: <b id="usdsell">Loading...</b>
+    </p>
+    <p>
+      USD Buy Rate: <b id="usdbuy">Loading...</b>
+    </p>
+    <p>
+      EUR Sell Rate: <b id="eursell">Loading...</b>
+    </p>
+    <p>
+      GBP Buy Rate: <b id="gbpbuy">Loading...</b>
+    </p>
 
-    <section style="margin:2em;padding:1em;border:1px solid #ddd;max-width:600px;">
-      <p>
-        As of {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}, the exchange rate for 1 US Dollar to Nigerian Naira is:
-        <b id="usdsell">Loading...</b>
-      </p>
-
-      <p>
-        If you're planning to buy 1 Dollar at street value, the current rate would cost you:
-        <b id="usdsell">Loading...</b>
-      </p>
-
-      <p>
-        If you have 1 Dollar to sell, you’ll get:
-        <b id="usdbuy">Loading...</b>
-      </p>
-    </section>
-
+    <!-- Load rates at runtime -->
     <LiveRates client:load />
   </body>
 </html>
