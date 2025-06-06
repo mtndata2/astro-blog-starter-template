@@ -7,22 +7,25 @@ export default function LiveRates() {
         const res = await fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates");
         const json = await res.json();
 
-        if (json.success && json.data?.USD_NGN) {
-          const { buy, sell } = json.data.USD_NGN;
+        if (json.success && json.data) {
+          Object.entries(json.data).forEach(([pair, { buy, sell }]) => {
+            const prefix = pair.split("_")[0].toLowerCase(); // usd, gbp, eur, etc.
 
-          const buyEl = document.getElementById("usdbuy");
-          const sellEl = document.getElementById("usdsell");
+            const buyEl = document.getElementById(`${prefix}buy`);
+            const sellEl = document.getElementById(`${prefix}sell`);
 
-          if (buyEl) buyEl.textContent = `₦${buy}`;
-          if (sellEl) sellEl.textContent = `₦${sell}`;
+            if (buyEl) buyEl.textContent = `₦${buy}`;
+            if (sellEl) sellEl.textContent = `₦${sell}`;
+          });
         } else {
-          console.warn("No USD_NGN data returned from API");
+          console.warn("API returned no data");
         }
       } catch (err) {
-        console.error("LiveRates fetch failed:", err);
+        console.error("Failed to fetch latest rates:", err);
       }
     };
 
+    // Wait until DOM is ready
     if (document.readyState === "complete") {
       updateRates();
     } else {
