@@ -1,18 +1,7 @@
 ---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
-
-let latest = {};
-try {
-  // ABSOLUTE URL is REQUIRED
-  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/latest-rates");
-  if (res.ok) {
-    const data = await res.json();
-    latest = data.USD_NGN ?? {};
-  }
-} catch (e) {
-  latest = {};
-}
+import LiveRates from "../components/LiveRates.jsx";
 ---
 <html lang="en">
   <head>
@@ -23,17 +12,24 @@ try {
   </head>
   <body>
     <Header />
-    <section>
-      <pre style="background:#222;color:#0f0;padding:8px;">{JSON.stringify(latest, null, 2)}</pre>
+
+    <section style="margin:2em;padding:1em;border:1px solid #ddd;max-width:600px;">
       <p>
-        As of {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}, thee exchange rate for 1 US Dollar to Nigerian Naira is <b>₦{latest.sell ?? "N/A"}</b>.
+        As of {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}, the exchange rate for 1 US Dollar to Nigerian Naira is:
+        <b id="usdsell">Loading...</b>
       </p>
+
       <p>
-        Ifm you're planning to buy 1 Dollar at street value, the current rate would cost you approximately. <b>₦{latest.sell ?? "N/A"}</b>.
+        If you're planning to buy 1 Dollar at street value, the current rate would cost you:
+        <b id="usdsell">Loading...</b>
       </p>
+
       <p>
-        Do you have 1 Dollar to sell now.? Here is the rate to sell: <b>₦{latest.buy ?? "N/A"}</b> for USD.
+        If you have 1 Dollar to sell, you’ll get:
+        <b id="usdbuy">Loading...</b>
       </p>
     </section>
+
+    <LiveRates client:load />
   </body>
 </html>
