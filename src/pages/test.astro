@@ -1,7 +1,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Live USD to NGN</title>
+    <title>Live USD to Naira Rate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <h2>Live USD to Naira Rate</h2>
@@ -9,20 +10,25 @@
     <p>USD Buy Rate: <b id="usdbuy">Loading...</b></p>
     <p>USD Sell Rate: <b id="usdsell">Loading...</b></p>
 
-    <!-- Live fetch script -->
     <script>
-      fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates")
-        .then(res => res.json())
-        .then(json => {
-          const usd = json.data?.USD_NGN;
-          if (usd) {
-            document.getElementById("usdbuy").textContent = `₦${usd.buy}`;
-            document.getElementById("usdsell").textContent = `₦${usd.sell}`;
-          }
-        })
-        .catch(err => {
-          console.error("Failed to fetch USD_NGN:", err);
-        });
+      window.addEventListener("DOMContentLoaded", () => {
+        fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates")
+          .then(res => res.json())
+          .then(json => {
+            const usd = json?.data?.USD_NGN;
+            if (usd) {
+              const buy = document.getElementById("usdbuy");
+              const sell = document.getElementById("usdsell");
+              if (buy) buy.textContent = `₦${usd.buy}`;
+              if (sell) sell.textContent = `₦${usd.sell}`;
+            } else {
+              console.warn("USD_NGN data missing from API response.");
+            }
+          })
+          .catch(err => {
+            console.error("Fetch failed:", err);
+          });
+      });
     </script>
   </body>
 </html>
