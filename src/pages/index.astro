@@ -23,32 +23,42 @@ const currencies = [
 
 let rates = {};
 let usdHistory = [];
+
 try {
-  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/latest-rates");
-  rates = await res.json();
+  const res = await fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates");
+  const json = await res.json();
+  if (json.success) {
+    rates = json.data;
+  }
 } catch (e) {
   rates = {};
 }
+
 try {
-  const res = await fetch("https://astro-blog-starter-template.mtndatasales.workers.dev/api/usd-ngn-history");
-  if (res.ok) {
-    usdHistory = await res.json();
+  const res = await fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/rates-history?pair=USD_NGN");
+  const json = await res.json();
+  if (json.success) {
+    usdHistory = json.history;
   }
 } catch (e) {
   usdHistory = [];
 }
 
-const todaySell = rates.USD_NGN?.sell ?? "N/A";
-const todayBuy = rates.USD_NGN?.buy ?? "N/A";
+
+const todaySell = rates["USD_NGN"]?.sell ?? "N/A";
+const todayBuy = rates["USD_NGN"]?.buy ?? "N/A";
+
 const yesterdaySell = usdHistory.length > 1 && typeof usdHistory.at(-2)?.sell === "number"
   ? usdHistory.at(-2).sell
   : "N/A";
+
 const percentChange =
   yesterdaySell !== "N/A" && todaySell !== "N/A" && typeof todaySell === "number" && typeof yesterdaySell === "number"
     ? (((todaySell - yesterdaySell) / yesterdaySell) * 100).toFixed(2)
     : "N/A";
 
 const last7 = usdHistory.slice(-7).reverse();
+
 ---
 
 <!DOCTYPE html>
