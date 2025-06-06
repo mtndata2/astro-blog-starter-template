@@ -1,26 +1,28 @@
----
-import LiveRates from "../components/LiveRates.jsx";
----
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Live Currency Rates</title>
+    <title>Live USD to NGN</title>
   </head>
   <body>
-    <p>
-      USD Sell Rate: <b id="usdsell">Loading...</b>
-    </p>
-    <p>
-      USD Buy Rate: <b id="usdbuy">Loading...</b>
-    </p>
-    <p>
-      EUR Sell Rate: <b id="eursell">Loading...</b>
-    </p>
-    <p>
-      GBP Buy Rate: <b id="gbpbuy">Loading...</b>
-    </p>
+    <h2>Live USD to Naira Rate</h2>
 
-    <!-- Load rates at runtime -->
-    <LiveRates client:load />
+    <p>USD Buy Rate: <b id="usdbuy">Loading...</b></p>
+    <p>USD Sell Rate: <b id="usdsell">Loading...</b></p>
+
+    <!-- Live fetch script -->
+    <script>
+      fetch("https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates")
+        .then(res => res.json())
+        .then(json => {
+          const usd = json.data?.USD_NGN;
+          if (usd) {
+            document.getElementById("usdbuy").textContent = `₦${usd.buy}`;
+            document.getElementById("usdsell").textContent = `₦${usd.sell}`;
+          }
+        })
+        .catch(err => {
+          console.error("Failed to fetch USD_NGN:", err);
+        });
+    </script>
   </body>
 </html>
