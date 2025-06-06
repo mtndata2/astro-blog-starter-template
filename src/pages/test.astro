@@ -1,64 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Live USD to Naira Rate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <h2>Live USD to Naira Rate</h2>
-
-  <p>USD Buy Rate: <b id="usdbuy">Loading...</b></p>
-  <p>USD Sell Rate: <b id="usdsell">Loading...</b></p>
-
-  <script>
-    const buyElem = document.getElementById("usdbuy");
-    const sellElem = document.getElementById("usdsell");
-    const apiUrl = "https://apli-apl-6795.mtndatasales.workers.dev/api/latest-rates";
-
-    // 1. Show the last known rates instantly from localStorage (if available)
-    function showCachedRates() {
-      const last = localStorage.getItem("usd_ngn_last");
-      if (last) {
-        try {
-          const { buy, sell } = JSON.parse(last);
-          if (buy) buyElem.textContent = `₦${buy}`;
-          if (sell) sellElem.textContent = `₦${sell}`;
-        } catch (e) { /* ignore JSON parse errors */ }
-      }
-    }
-
-    // 2. Fetch latest rates from API and update the page & localStorage
-    function fetchAndShowRates() {
-      fetch(apiUrl)
-        .then(res => res.json())
-        .then(json => {
-          // Support both .data.USD_NGN and .USD_NGN shape
-          const usd = json?.data?.USD_NGN || json?.USD_NGN;
+---
+import Header from '../components/Header.astro';
+// At build or SSR, fetch from KV (e.g. in getStaticProps or getServerSideProps, or in Astro middleware)
+const latestBuy = await kv.get("USD_NGN:today")?.buy ?? "N/A";
+const latestSell = await kv.get("USD_NGN:today")?.sell ?? "N/A";
+---
+<html>
+  <head>
+    <title>USD to Naira Rate</title>
+  </head>
+  <body>
+    <Header />
+    <p>USD Buy Rate: <b id="usdbuy">₦{latestBuy}</b></p>
+    <p>USD Sell Rate: <b id="usdsell">₦{latestSell}</b></p>
+    <script>
+      // Optionally update with fresher data after page load
+      window.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/latest-rates").then(r => r.json()).then(json => {
+          const usd = json?.USD_NGN;
           if (usd) {
-            if (usd.buy) buyElem.textContent = `₦${usd.buy}`;
-            if (usd.sell) sellElem.textContent = `₦${usd.sell}`;
-            // Save the latest rates
-            localStorage.setItem("usd_ngn_last", JSON.stringify({ buy: usd.buy, sell: usd.sell }));
-          } else {
-            buyElem.textContent = "N/A";
-            sellElem.textContent = "N/A";
+            document.getElementById("usdbuy").textContent = "₦" + usd.buy;
+            document.getElementById("usdsell").textContent = "₦" + usd.sell;
+            // Optionally: Save to localStorage for next visit
+            localStorage.setItem("usd_buy", usd.buy);
+            localStorage.setItem("usd_sell", usd.sell);
           }
-        })
-        .catch(err => {
-          // Only fallback to localStorage value on fetch error
-          showCachedRates();
         });
-    }
-
-    // On page load: show cached value, then fetch new data
-    document.addEventListener("DOMContentLoaded", () => {
-      showCachedRates();
-      fetchAndShowRates();
-      // Optionally, update rates every minute:
-      setInterval(fetchAndShowRates, 60_000);
-    });
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>
-
