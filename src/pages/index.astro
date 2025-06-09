@@ -79,13 +79,7 @@ const last7 = usdHistory.slice(-7).reverse();
   <body>
     <Header />
 
-<p>Buy: <b id="usdbuy">Loading...</b></p>
-<p>Sell: <b id="usdsell">Loading...</b></p>
 
-<p>Euro Buy: <b id="eurbuy">Loading...</b></p>
-<p>Euro Sell: <b id="eursell">Loading...</b></p>
-
-<p>Pound Sell: <b id="gbpsell">Loading...</b></p>
 
 
 
@@ -98,8 +92,7 @@ const last7 = usdHistory.slice(-7).reverse();
       Yesterday it sold for <b>{yesterdaySell !== "N/A" ? yesterdaySell : "N/A"}</b>,
       which is just <b>{percentChange !== "N/A" ? percentChange + "%" : "N/A"}</b> of today's rate.
 
-<LiveRates client:load />
-<MultiHistory client:load />
+
 
     </div>
 
